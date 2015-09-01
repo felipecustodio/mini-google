@@ -1,6 +1,7 @@
 /*-------------------------------------------------------
 ICMC - USP
 BCC - 2015
+SCC0202 - Algoritmos e Estruturas de Dados I
 
   __  __ _       _    _____                   _      
  |  \/  (_)     (_)  / ____|                 | |     
@@ -12,7 +13,7 @@ BCC - 2015
                                         |___/        
 
 Alunos	:	Felipe Scrochio Custodio
-			Guilherme Vicentin
+			Guilherme Rodrigues Vicentin
 
 Nº USP	:	9442688
 			9293369
