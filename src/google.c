@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "google.h"
 
 /*-------------------------------------------------------
@@ -14,7 +12,7 @@ typedef struct database {
 	WEBSITE *last;
 	int size;
 
-} DATABASE
+} DATABASE;
 
 
 /*-------------------------------------------------------
@@ -23,7 +21,44 @@ typedef struct database {
 	
 ---------------------------------------------------------*/
 
-void insertWebsite();
+DATABASE *createDatabase (void)
+{
+	DATABASE *database = (DATABASE *) malloc(sizeof(DATABASE));
+
+	if (database != NULL)
+	{
+		database->first = NULL;
+		database->last = NULL;
+		database->size = 0;
+	}
+
+	return database;
+}
+
+boolean insertWebsite(DATABASE *database)
+{
+	WEBSITE *newW = (WEBSITE *) malloc(sizeof(WEBSITE));
+
+	if (newW != NULL)
+	{
+		if (database->size == 0)
+		{
+			database->first = newW;
+			database->last = newW;
+		}
+		else
+		{
+			database->last->next = newW;
+		}
+
+		database->size++;
+
+		return true;
+	}
+	else
+		return false;
+}
+
 void insertKeyword();
 void removeWebsite();
 void updateRank();

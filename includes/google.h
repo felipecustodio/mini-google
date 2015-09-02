@@ -1,6 +1,12 @@
 #ifndef __GOOGLE_H__
 #define __GOOGLE_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "website.h"
+#include "globals.h"
+
 /*-------------------------------------------------------
 
 	DEFINIÇÕES
@@ -12,7 +18,6 @@
 // Limite de palavras-chave
 #define MAX_KEYWORDS 10
 
-typedef struct website WEBSITE;
 typedef struct database DATABASE;
 
 /*-------------------------------------------------------
@@ -21,7 +26,8 @@ typedef struct database DATABASE;
 	
 ---------------------------------------------------------*/
 
-void insertWebsite();
+DATABASE *createDatabase (void);
+boolean insertWebsite(DATABASE *database);
 void insertKeyword();
 void removeWebsite();
 void updateRank();
