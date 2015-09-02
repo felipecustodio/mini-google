@@ -1,4 +1,12 @@
-# mini-google
+#  __  __ _       _    _____                   _      
+# |  \/  (_)     (_)  / ____|                 | |     
+# | \  / |_ _ __  _  | |  __  ___   ___   __ _| | ___ 
+# | |\/| | | '_ \| | | | |_ |/ _ \ / _ \ / _` | |/ _ \
+# | |  | | | | | | | | |__| | (_) | (_) | (_| | |  __/
+# |_|  |_|_|_| |_|_|  \_____|\___/ \___/ \__, |_|\___|
+#                                         __/ |       
+#                                        |___/        
+
 Projeto 01 da disciplina de Algoritmos e Estruturas de Dados 1, Bacharelado de Ciências da Computação, ICMC - USP.
 
 # Mini-Google
