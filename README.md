@@ -1,8 +1,17 @@
 # Projeto 01 - Mini-Google
 
+  __  __ _       _    _____                   _      
+ |  \/  (_)     (_)  / ____|                 | |     
+ | \  / |_ _ __  _  | |  __  ___   ___   __ _| | ___ 
+ | |\/| | | '_ \| | | | |_ |/ _ \ / _ \ / _` | |/ _ \
+ | |  | | | | | | | | |__| | (_) | (_) | (_| | |  __/
+ |_|  |_|_|_| |_|_|  \_____|\___/ \___/ \__, |_|\___|
+                                         __/ |       
+                                        |___/        
+
 Projeto 01 da disciplina de Algoritmos e Estruturas de Dados 1, Bacharelado de Ciências da Computação, ICMC - USP.
 
-# Mini-Google
+# O que é o Mini-Google?
 
 O Google Search é um serviço de busca que, a partir de um termo informado pelo usuário,
 devolve como resultado uma lista de links ordenados por relevância. Esse programa é um
