@@ -1,4 +1,46 @@
+/*-------------------------------------------------------
+
+	HEADER AUXILIAR  (NOME A SER MUDADO)
+		Contém funções para manipulação de:
+			@ Strings
+			@ Arquivos (googlebot.csv)
+			@ Menu principal 
+			@ Impressão de dados
+	
+---------------------------------------------------------*/
+
 #include "auxiliar.h"
+
+/*-------------------------------------------------------
+
+	ARQUIVOS
+	
+---------------------------------------------------------*/
+
+void readCSV();
+
+/*-------------------------------------------------------
+
+	IMPRESSÃO DE DADOS
+	
+---------------------------------------------------------*/
+
+void printDatabase(WEBSITE *first) {
+
+   WEBSITE *i;
+   for (i = first->next; i != NULL; i = i->prox) {
+      // printWebsite(i);
+   	
+   }
+}
+
+void printWebsite(WEBSITE *i);
+
+/*-------------------------------------------------------
+
+	STRINGS
+	
+---------------------------------------------------------*/
 
 char* readString() 
 {	
@@ -20,6 +62,12 @@ char* readString()
 
 	return string;
 }
+
+/*-------------------------------------------------------
+
+	MENU
+	
+---------------------------------------------------------*/
 
 void printHeader(void)
 {

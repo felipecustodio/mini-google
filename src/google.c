@@ -63,7 +63,6 @@ void insertKeyword();
 void removeWebsite();
 void updateRank();
 void printList();
-// Busca binária?
 void searchKeyword();
 void relatedWebsites();
 void shutdown();

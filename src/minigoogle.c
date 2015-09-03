@@ -87,7 +87,7 @@ int main(int argc, char const *argv[]) {
 				break;
 		}
 
-		printf("\tPRECIONE QUALQUER TECLA PARA CONTINUAR");
+		printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR ");
 		getchar();
 
 	} while(operation != 7);
