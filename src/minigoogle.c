@@ -28,58 +28,71 @@ Data:		01/09/2015
 #include "google.h"
 #include "auxiliar.h"
 
+typedef enum operation
+{
+	insertWebSite = 1,
+	removeWebSite,
+	insertKeyWord,
+	refresh,
+	showList,
+	searchByKey,
+	close
+
+} Operation;
+
 int main(int argc, char const *argv[]) {
  	
- 	int operation;
+ 	int aux;
+ 	Operation operation;
 
- 
 	do
 	{
 		printMainMenu();
-		scanf("%d", &operation);
+		scanf("%d", &aux);
+		operation = aux;
 		getchar();
 
 		system("clear");
 
 		switch(operation) {
-			case 1:
+			case insertWebSite:
 				// Inserir novo site
 				printHeader();
 				printf("\n\n\tOPCAO 1\n\n");
 				break;
 			
-			case 2:
+			case removeWebSite:
 				// Inserir palavra-chave em um site
 				printHeader();
 				printf("\n\n\tOPCAO 2\n\n");
 				break;
 			
-			case 3:
+			case insertKeyWord:
 				// Remover um site da lista
 				printHeader();
 				printf("\n\n\tOPCAO 3\n\n");
 				break;
 			
-			case 4:
+			case refresh:
 				// Atualizar relevância de um site
 				printHeader();
 				printf("\n\n\tOPCAO 4\n\n");
 				break;
 			
-			case 5:
+			case showList:
 				// Exibir lista
 				printHeader();
 				printf("\n\n\tOPCAO 5\n\n");
 				break;
 
-			case 6:
+			case searchByKey:
 				// Busca por palavra-chave
 				// Exibir sugestão de sites
 				printHeader();
 				printf("\n\n\tOPCAO 6\n\n");
 				break;
 
-			case 7:
+			case close:
 				// Liberar memória
 				// Finalizar o programa
 				printHeader();
@@ -90,7 +103,7 @@ int main(int argc, char const *argv[]) {
 		printf("\tPRECIONE QUALQUER TECLA PARA CONTINUAR");
 		getchar();
 
-	} while(operation != 7);
+	} while(operation != close);
 
 	return 0;
 }
