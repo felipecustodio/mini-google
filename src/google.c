@@ -1,24 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h> // talvez não use
 #include "google.h"
+#include "website.h"
 
 /*-------------------------------------------------------
-
-	DEFINIÇÕES
-	
----------------------------------------------------------*/
-
-typedef struct database {
-
-	WEBSITE *first;
-	WEBSITE *last;
-	int size;
-
-} DATABASE;
-
-
-/*-------------------------------------------------------
-
-	FUNÇÕES DE MANIPULAÇÃO DA LISTA
-	
+	FUNÇÕES DE MANIPULAÇÃO DA LISTA	
 ---------------------------------------------------------*/
 
 DATABASE *createDatabase (void)
@@ -27,8 +15,10 @@ DATABASE *createDatabase (void)
 
 	if (database != NULL)
 	{
-		database->first = NULL;
-		database->last = NULL;
+		WEBSITE *sentinel = (WEBSITE *)malloc(sizeof(WEBSITE));
+		database->header = sentinel;
+		database->header->next = sentinel;
+		database->header->previous = sentinel;
 		database->size = 0;
 	}
 
@@ -37,20 +27,18 @@ DATABASE *createDatabase (void)
 
 boolean insertWebsite(DATABASE *database)
 {
-	WEBSITE *newW = (WEBSITE *) malloc(sizeof(WEBSITE));
+	WEBSITE *newWebsite = (WEBSITE *)malloc(sizeof(WEBSITE));
 
-	if (newW != NULL)
+	if (newWebsite != NULL)
 	{
-		if (database->size == 0)
-		{
-			database->first = newW;
-			database->last = newW;
-		}
-		else
-		{
-			database->last->next = newW;
-		}
+		WEBSITE *aux = NULL;
+		WEBSITE *end = database->header->previous;
 
+		aux = end;
+		aux->proximo = newWebsite;
+		end = newWebsite;
+		newWebsite->previous = aux;
+		newWebsite->next = database->header;
 		database->size++;
 
 		return true;
@@ -59,10 +47,74 @@ boolean insertWebsite(DATABASE *database)
 		return false;
 }
 
-void insertKeyword();
-void removeWebsite();
-void updateRank();
-void printList();
-void searchKeyword();
-void relatedWebsites();
-void shutdown();
+WEBSITE insertKeyword(WEBSITE *site, char* newKeyword) 
+{
+
+	site->list.keywords = (char**)realloc(site->list.keywords, sizeof(char*) * (site->list.total + 1));
+	site->list.keywords[site->list.total] = newKeyword;
+	site->list.total = site->list.total + 1;
+	return site;
+
+}
+
+boolean removeWebsite(DATABASE *database, WEBSITE *removal)
+{
+	if (removal != NULL) { 
+		removal->next->previous = removal->previous;
+		removal->previous->next = removal->next;
+		freeWebsite(removal);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void updateRank(WEBSITE *site, int newRank)
+{
+	site->rank = newRank;
+	return site;
+}
+
+void printList() 
+{
+
+}
+
+void searchKeyword(DATABASE *database, char *keyword)
+{
+	// começar a busca no header com nó sentinela
+	WEBSITE *aux = database->header;
+	int i, j, compare;
+	boolean found;
+	
+	for (i = 0; i < database->size; i++)
+	{
+		// percorrer keywords do website atual
+		for (j = 0; j < aux->list.size; j++) {
+			compare = strcmp(aux->list.keywords[j], keyword);
+			if (compare == 0) {
+				return true;
+			}
+		}
+	}
+}
+
+void relatedWebsites()
+{
+
+}
+
+boolean emptyList(DATABASE *database) {
+
+	if(database->header->next == NULL) {
+		return true;
+	} else {
+		return false;
+	}
+
+}
+
+void shutdown() 
+{
+	// limpar memoria
+}

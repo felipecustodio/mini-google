@@ -10,16 +10,13 @@
 #include "sorting.h"
 
 /*-------------------------------------------------------
-
 	ORDENAÇÃO E BUSCA
-	
 ---------------------------------------------------------*/
-// ORDENAÇÃO
-// Duas opções: Retornar o DATABASE ou passar ele como endereço e não retornar nada
-DATABASE mergeSort(DATABASE data); 		// Merge Sort -> Ordenação com lista totalmente aleatória
-DATABASE insertionSort(DATABASE data); 	// Insertion Sort -> Ordenação com lista 
-										// quase ordenada (após inserir elemento ou remover)
+
+// ORDENAÇÃO POR RANKING
+boolean mergeSort(DATABASE *data);
+boolean insertionSort(DATABASE *data);
 // BUSCA
-DATABASE binarySearch(DATABASE data); 
+boolean binarySearch(DATABASE data); 
 
 #endif

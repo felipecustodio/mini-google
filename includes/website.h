@@ -15,13 +15,15 @@ typedef struct keywords {
 } KEYWORDS;
 
 typedef struct website {
-
+	// Propriedades de um website
 	int id;
 	char name[50];
 	int rank;
 	char link[100];
 	KEYWORDS list;
+	// Lista duplamente ligada
 	struct website *next;
+	struct website *previous;
 
 } WEBSITE;
 

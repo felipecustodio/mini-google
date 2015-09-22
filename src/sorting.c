@@ -12,15 +12,32 @@
 	
 ---------------------------------------------------------*/
 
-DATABASE mergeSort(DATABASE data) {
+DATABASE mergeSort(DATABASE *data, WEBSITE *begin, WEBSITE *end) {
+
+	int i;
+	if((begin->rank) - (end->rank) >= 1) {
+		
+		// encontrar centro
+		// percorrer de begin a end, depois percorrer a metade do caminho
+
+		// divisao
+		mergesort(data, begin, center);
+		mergesort(data, center->next, end);
+
+		// conquista
+		intercala(data, begin, center, end);
+	}
+
+
+
 
 } 	
 
-DATABASE insertionSort(DATABASE data) {
+DATABASE insertionSort(DATABASE *data) {
 
 }
 
-DATABASE binarySearch(DATABASE data) {
+DATABASE binarySearch(DATABASE *data) {
 
 }
 

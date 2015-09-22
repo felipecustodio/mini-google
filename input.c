@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 void readCSV() {
 
 	FILE *bot = NULL;
@@ -31,7 +34,6 @@ char* readString(char stop) {
 
 		scanf("%c", &value);
 		string = (char*)realloc(string, sizeof(char) * counter + 1);
-		
 		string[counter] = value;		
 		counter++;
 

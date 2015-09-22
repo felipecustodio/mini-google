@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "website.h"
 #include "globals.h"
 
@@ -18,7 +17,13 @@
 // Limite de palavras-chave
 #define MAX_KEYWORDS 10
 
-typedef struct database DATABASE;
+typedef struct database {
+
+	// Lista circular com cabeçalho
+	WEBSITE *header;
+	int size;
+
+} DATABASE;
 
 /*-------------------------------------------------------
 
@@ -26,15 +31,15 @@ typedef struct database DATABASE;
 	
 ---------------------------------------------------------*/
 
-DATABASE *createDatabase (void);
+DATABASE *createDatabase(void);
 boolean insertWebsite(DATABASE *database);
-void insertKeyword();
+WEBSITE insertKeyword(WEBSITE *site, char* newKeyword);
 void removeWebsite();
-void updateRank();
+void updateRank(WEBSITE *site, int newRank);
 void printList();
-// Busca binária?
-void searchKeyword();
+void searchKeyword(DATABASE *database, char *keyword);
 void relatedWebsites();
+boolean emptyList(DATABASE *database);
 void shutdown();
 
 /*WEBSITE *newWebsite(void);
