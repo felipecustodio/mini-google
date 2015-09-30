@@ -22,18 +22,16 @@ Data:		01/09/2015
 ---------------------------------------------------------*/
 
 #include "globals.h"
-#include "google.h"
-#include "menu.h"
 
 typedef enum operation
 {
 	insertWebSite = 1,
 	removeWebSite,
 	insertKeyWord,
-	refresh,
+	updateRank,
 	showList,
 	searchByKey,
-	close
+	shutdown
 
 } Operation;
 
@@ -70,7 +68,7 @@ int main(int argc, char const *argv[]) {
 				printf("\n\n\tOPCAO 3\n\n");
 				break;
 			
-			case refresh:
+			case updateRank:
 				// Atualizar relevância de um site
 				printHeader();
 				printf("\n\n\tOPCAO 4\n\n");
@@ -89,7 +87,7 @@ int main(int argc, char const *argv[]) {
 				printf("\n\n\tOPCAO 6\n\n");
 				break;
 
-			case close:
+			case shutdown:
 				// Liberar memória
 				// Finalizar o programa
 				printHeader();
@@ -100,7 +98,7 @@ int main(int argc, char const *argv[]) {
 		printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR");
 		getchar();
 
-	} while(operation != close);
+	} while(operation != shutdown);
 
 	return 0;
 }
