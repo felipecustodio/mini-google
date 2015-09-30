@@ -35,6 +35,18 @@ typedef enum operation
 
 } Operation;
 
+typedef enum operation
+{
+	insertWebSite = 1,
+	removeWebSite,
+	insertKeyWord,
+	refresh,
+	showList,
+	searchByKey,
+	close
+
+} Operation;
+
 int main(int argc, char const *argv[]) {
  	
  	int aux;
