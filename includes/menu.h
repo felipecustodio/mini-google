@@ -7,7 +7,6 @@
 
 #include "globals.h"
 
-char* readString();
 void printHeader(void);
 void printMenu(void);
 void printMainMenu(void);

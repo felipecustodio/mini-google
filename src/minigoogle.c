@@ -21,10 +21,7 @@ Nº USP	:	9442688
 Data:		01/09/2015
 ---------------------------------------------------------*/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "globals.h"
 #include "google.h"
 #include "menu.h"
 

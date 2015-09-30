@@ -1,45 +1,81 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h> // talvez não use
+#include "globals.h"
 #include "google.h"
 #include "website.h"
 
 /*-------------------------------------------------------
-	FUNÇÕES DE MANIPULAÇÃO DA LISTA	
+	FUNÇÕES DE MANIPULAÇÃO 
+	DA LISTA DINÂMICA CIRCULAR COM CABEÇALHO
 ---------------------------------------------------------*/
 
-DATABASE *createDatabase (void)
+/*-------------------------------------------------------
+
+	createDatabase(DATABASE **database)
+
+		DESCRIÇÃO:
+		
+			Aloca um DATABASE* na memória, setando
+			o cabeçalho com ponteiros de próximo e
+			anterior para ele mesmo.
+		
+		PARÂMETROS:
+			
+			@DATABASE **database: 
+				Ponteiro para um DATABASE* na main.
+			
+---------------------------------------------------------*/
+
+void createDatabase(DATABASE **database)
 {
-	DATABASE *database = (DATABASE *) malloc(sizeof(DATABASE));
+	(*database) = (DATABASE *) malloc(sizeof(DATABASE));
 
 	if (database != NULL)
 	{
 		WEBSITE *sentinel = (WEBSITE *)malloc(sizeof(WEBSITE));
-		database->header = sentinel;
-		database->header->next = sentinel;
-		database->header->previous = sentinel;
-		database->size = 0;
-	}
+		sentinel->name = (char*)malloc(sizeof(char) * 100);
+		sentinel->name = "header_sentinel";
 
-	return database;
+		(*database)->header = sentinel;
+		(*database)->header->next = sentinel;
+		(*database)->header->previous = sentinel;
+		(*database)->size = 0;
+
+	}
 }
 
-boolean insertWebsite(DATABASE *database)
-{
-	WEBSITE *newWebsite = (WEBSITE *)malloc(sizeof(WEBSITE));
+/*-------------------------------------------------------
 
-	if (newWebsite != NULL)
+	insertWebsite(DATABASE *data, WEBSITE *node)
+
+		DESCRIÇÃO:
+		
+			Insere um novo nó WEBSITE na lista circular
+			DATABASE *data. Seta os ponteiros de anterior
+			e próximo do header, do novo nó e do antigo nó
+			final (anterior do header).
+		
+		PARÂMETROS:
+			
+			@DATABASE *data: 
+				Lista dinâmica.
+			@WEBSITE *node:
+				Novo nó a ser inserido (previamente alocado)
+
+---------------------------------------------------------*/
+
+boolean insertWebsite(DATABASE *data, WEBSITE *node)
+{
+	if (node != NULL)
 	{
 		WEBSITE *aux = NULL;
-		WEBSITE *end = database->header->previous;
+		WEBSITE *end = (data)->header->previous;
 
 		aux = end;
-		aux->proximo = newWebsite;
-		end = newWebsite;
-		newWebsite->previous = aux;
-		newWebsite->next = database->header;
-		database->size++;
+		aux->next = node;
+		end = node;
+		node->previous = aux;
+		node->next = (data)->header;
+		(data)->header->previous = node;
+		(data)->size++;
 
 		return true;
 	}
@@ -47,74 +83,211 @@ boolean insertWebsite(DATABASE *database)
 		return false;
 }
 
-WEBSITE insertKeyword(WEBSITE *site, char* newKeyword) 
-{
+/*-------------------------------------------------------
 
-	site->list.keywords = (char**)realloc(site->list.keywords, sizeof(char*) * (site->list.total + 1));
-	site->list.keywords[site->list.total] = newKeyword;
-	site->list.total = site->list.total + 1;
-	return site;
+	insertKeyword
+
+		DESCRIÇÃO:
+			Insere uma nova keyword em um determinado website
+		
+		PARÂMETROS:
+			@WEBSITE **site: 
+				ponteiro para um WEBSITE* que será
+				alterado
+			@char *newKeyword: 
+				nova keyword a ser inserida no website
+
+---------------------------------------------------------*/
+
+void insertKeyword(WEBSITE **site, char* newKeyword) 
+{
+	// Alocar mais uma string na lista de keywords
+	(*site)->keywords->keywords = (char**)realloc(((*site)->keywords->keywords), sizeof(char*) * ((*site)->keywords->total + 1));
+	(*site)->keywords->keywords[(*site)->keywords->total] = (char*)malloc(sizeof(char) * strlen(newKeyword));
+	strcpy((*site)->keywords->keywords[(*site)->keywords->total], newKeyword);
+	(*site)->keywords->total++;
 
 }
 
-boolean removeWebsite(DATABASE *database, WEBSITE *removal)
+/*-------------------------------------------------------
+
+	removeWebsite
+
+		DESCRIÇÃO:
+			Remove um nó website do database
+		
+		PARÂMETROS:
+			@ DATABASE **data: ponteiro para a lista dinâmica data
+			@ WEBSITE *removal: nó a ser removido da lista
+			
+---------------------------------------------------------*/
+
+boolean removeWebsite(DATABASE **data, WEBSITE *removal)
 {
+
 	if (removal != NULL) { 
-		removal->next->previous = removal->previous;
+
+		WEBSITE *aux = NULL;
 		removal->previous->next = removal->next;
-		freeWebsite(removal);
+		removal->next->previous = removal->previous;	
+
+		// ****** LIBERAR MEMÓRIA DO NÓ ********
+
 		return true;
 	} else {
 		return false;
 	}
 }
+
+
+/*-------------------------------------------------------
+
+	updateRank
+
+		DESCRIÇÃO:
+			Atualiza o page rank de um website
+		
+		PARÂMETROS:
+			WEBSITE *site: nó a ser modificado
+			int newRank: novo page rank do website
+
+---------------------------------------------------------*/
 
 void updateRank(WEBSITE *site, int newRank)
 {
 	site->rank = newRank;
-	return site;
+
 }
 
-void printList() 
+
+// *********************** FUNÇÕES ABAIXO PRECISAM SER TESTADAS ***************************
+//***************************
+//***************************
+//***************************
+//***************************
+//***************************
+
+
+/*-------------------------------------------------------
+
+	nome_da_funcao
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
+
+void printList(DATABASE *data) 
 {
 
+	WEBSITE *aux = NULL;
+	aux = data->header->next;
+	while (aux != data->header) {
+		// print website
+	}
+
 }
 
-void searchKeyword(DATABASE *database, char *keyword)
+/*-------------------------------------------------------
+	FUNÇÕES DE BUSCA POR PALAVRA-CHAVE E 
+	EXIBIÇÃO DE SITES RELACIONADOS
+---------------------------------------------------------*/
+
+/*-------------------------------------------------------
+
+	nome_da_funcao
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
+
+SEARCH* searchKeyword(DATABASE *database, char *keyword)
 {
 	// começar a busca no header com nó sentinela
-	WEBSITE *aux = database->header;
+	SEARCH *search;
+	search = (SEARCH*)malloc(sizeof(SEARCH));
+	search->total = 0;
+	search->results = NULL;
+
+	WEBSITE *aux = database->header->next;
 	int i, j, compare;
-	boolean found;
 	
 	for (i = 0; i < database->size; i++)
 	{
 		// percorrer keywords do website atual
-		for (j = 0; j < aux->list.size; j++) {
-			compare = strcmp(aux->list.keywords[j], keyword);
+		for (j = 0; j < aux->list->total; j++) {
+
+			compare = strcmp(aux->list->keywords[j], keyword);
+
 			if (compare == 0) {
-				return true;
+				// TAD search: contém endereços para os sites encontrados na busca
+				search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
+				search->results[search->total] = aux;
+				search->total++;
 			}
+
 		}
+
+		aux = aux->next;
+
 	}
+
+	return search;
+
 }
+
+/*-------------------------------------------------------
+
+	nome_da_funcao
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
 
 void relatedWebsites()
 {
+	
+// ********************
 
 }
 
+/*-------------------------------------------------------
+
+	nome_da_funcao
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
+
 boolean emptyList(DATABASE *database) {
 
-	if(database->header->next == NULL) {
+	if(database->header->next == database->header) {
 		return true;
 	} else {
 		return false;
 	}
-
 }
 
-void shutdown() 
-{
-	// limpar memoria
-}
+
+
+/*-------------------------------------------------------
+
+	nome_da_funcao
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
