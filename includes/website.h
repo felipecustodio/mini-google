@@ -6,35 +6,34 @@
 /*-------------------------------------------------------
 
 	TAD WEBSITE
-	
+		Cada website é um nó do banco de dados,
+		configurando uma lista dinâmica circular
+		duplamente ligada com cabeçalho.
+		
 ---------------------------------------------------------*/
 
 /*-------------------------------------------------------
-
-	TAD WEBSITE
-	
+	DEFINIÇÕES
 ---------------------------------------------------------*/
 
 typedef struct keywords {
 
+	// com um vetor de strings, fica mais fácil acessar
+	// cada keyword de um website separadamente
 	char **keywords;
 	int total;
 	
 } KEYWORDS;
 
-/*-------------------------------------------------------
-
-	TAD WEBSITE
-	
----------------------------------------------------------*/
-
 typedef struct website {
 	// Propriedades de um website
 	int id;
-	char name[50];
+	char *name;
 	int rank;
-	char address[100];
+	char *address;
 	KEYWORDS *keywords;
+	// boolean auxiliar para busca de
+	// sites com keywords relacionadas
 	boolean related;
 	// Lista duplamente ligada
 	struct website *next;
@@ -42,14 +41,11 @@ typedef struct website {
 
 } WEBSITE;
 
-/*-------------------------------------------------------
-
-	TAD WEBSITE
-	
----------------------------------------------------------*/
-
 typedef struct search {
 
+	// Armazena os resultados de uma busca,
+	// criando um vetor temporário de nós
+	// do tipo website. 
 	WEBSITE **results;
 	int total;
 

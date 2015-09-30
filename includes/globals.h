@@ -13,6 +13,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "google.h"
+#include "website.h"
+#include "input.h"
+#include "menu.h"
 
 /*-------------------------------------------------------
 	TIPO BOOLEANO (Não existe como padrão na linguagem C)
