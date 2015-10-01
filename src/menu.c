@@ -37,7 +37,11 @@ void printMenu(void)
 
 void printMainMenu(void)
 {
-	system("clear");
+	int i;
+	for (i = 0; i < 250; i++)
+	{
+		printf("\n");
+	}
 	printHeader();
 	printMenu();
 }

@@ -1,6 +1,5 @@
 #include "globals.h"
 #include "google.h"
-#include "website.h"
 
 /*-------------------------------------------------------
 	FUNÇÕES DE MANIPULAÇÃO 
@@ -106,7 +105,6 @@ void insertKeyword(WEBSITE **site, char* newKeyword)
 	(*site)->keywords->keywords[(*site)->keywords->total] = (char*)malloc(sizeof(char) * strlen(newKeyword));
 	strcpy((*site)->keywords->keywords[(*site)->keywords->total], newKeyword);
 	(*site)->keywords->total++;
-
 }
 
 /*-------------------------------------------------------
@@ -223,6 +221,105 @@ void newWebsite(DATABASE **data) {
 
 }
 
+SEARCH* searchKeyword(DATABASE *database, char *keyword)
+{
+    // começar a busca no header com nó sentinela
+    SEARCH *search;
+    search = (SEARCH*)malloc(sizeof(SEARCH));
+    search->total = 0;
+    search->results = NULL;
+    
+    WEBSITE *aux = database->header->next;
+    int i, j, compare;
+    
+    while(aux != database->header)
+    {
+        // percorrer keywords do website atual
+        for (j = 0; j < aux->keywords->total; j++) {
+            
+            compare = strcmp(aux->keywords->keywords[j], keyword);
+            
+            if (compare == 0) {
+                // TAD search: contém endereços para os sites encontrados na busca
+                search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
+                search->results[search->total] = aux;
+                search->total++;
+            }
+            
+        }
+        
+        aux = aux->next;
+        
+    }
+    
+    return search;
+    
+}
+
+/*-------------------------------------------------------
+
+	nome_da_funcao
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
+
+void relatedWebsites(DATABASE* database, SEARCH* search, char *keyword)
+{
+    KEYWORDS* keylist = (KEYWORDS*) malloc(sizeof(KEYWORDS));
+    keylist->keywords	= (char**) malloc(sizeof(char*) * search->total);
+    
+    int i;
+    for(i = 0; i < search->total; i++)
+    {
+        //pegando uma palavra por site para buscar relacionados
+        if (strcmp(keyword, search->results[i]->keywords->keywords[i]))
+            keylist->keywords[i] = search->results[i]->keywords->keywords[i];
+        else
+        {
+            if (i > 0)
+            {
+                keylist->keywords[i] = search->results[i]->keywords->keywords[i-1];
+            }
+            else
+            {
+                keylist->keywords[i] = search->results[i]->keywords->keywords[i+1];
+            }
+        }
+        
+    }
+    
+    WEBSITE* aux = database->header->next;
+    
+    int j;
+    while(aux != database->header)
+    {
+        for(i = 0; i < keylist->total; i++)
+        {
+            for(j = 0; j < aux->keywords->total; j++)
+            {
+                if(strcmp(keylist->keywords[i], aux->keywords->keywords[j]))
+                {
+                    aux->related = true;
+                }
+            }
+        }
+        
+        aux = aux->next;
+    }
+    
+    for(i = 0; i < search->total; i++)
+    {
+        search->results[i]->related = false;
+    }
+    
+    free(keylist->keywords);
+    free(keylist);
+}
+
 /*-------------------------------------------------------
 
 	emptyList	
@@ -242,4 +339,73 @@ boolean emptyList(DATABASE *database) {
 	} else {
 		return false;
 	}
-}/
+}
+
+/*-------------------------------------------------------
+
+	writeCSVFile
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
+
+void writeCSVFile(DATABASE* database, const char* filename)
+{
+    FILE* csv_file = fopen(filename, "w");
+    if (csv_file == NULL)
+    {
+        printf("Could not open the file: %s\n", filename);
+        exit(0);
+    }
+    
+    WEBSITE* aux = database->header->next;
+    int i;
+    
+    while(aux != database->header)
+    {
+        fprintf(csv_file, "%d,%s,%d,%s,", aux->id, aux->name, aux->rank, aux->address);
+        for(i = 0; i < aux->keywords->total-1; i++)
+        {
+            fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+            fprintf(csv_file, ",");
+        }
+        
+        fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+        fprintf(csv_file, "\n");
+        
+        aux = aux->next;
+    }
+    
+    fclose(csv_file);
+}
+
+/*-------------------------------------------------------
+
+	searchID
+
+		DESCRIÇÃO:
+
+		
+		PARÂMETROS:
+			
+---------------------------------------------------------*/
+
+WEBSITE* searchID(DATABASE* database, const int id)
+{
+	WEBSITE* aux = database->header->next;
+
+	while (aux != database->header)
+	{
+		if (aux->id == id)
+		{
+			return aux;
+		}
+		aux = aux->next;
+	}
+
+	aux = NULL;
+	return aux;
+}
