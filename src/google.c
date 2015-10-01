@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "website.h"
 #include "google.h"
 
 /*-------------------------------------------------------
@@ -155,7 +156,7 @@ void updateRank(WEBSITE *site)
 {
 	int newRank = 0;
 	printf("\tINSIRA O NOVO RANK DE %s:\n", site->name);
-	scanf("%d", newRank);
+	scanf("%d", &newRank);
 	site->rank = newRank;
 	printf("\tRANK ATUALIZADO COM SUCESSO\n");
 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n");
@@ -346,9 +347,12 @@ boolean emptyList(DATABASE *database) {
 	writeCSVFile
 
 		DESCRIÇÃO:
-
+			Reescreve o arquivo CSV com a lista
+			de sites atualizada.
 		
 		PARÂMETROS:
+			@ DATABASE* database: lista a ser escrita no arquivo
+			@ const char* filename: nome do arquivo
 			
 ---------------------------------------------------------*/
 
@@ -387,9 +391,12 @@ void writeCSVFile(DATABASE* database, const char* filename)
 	searchID
 
 		DESCRIÇÃO:
-
+			Busca um website por ID, retornando
+			um ponteiro para seu nó na lista.
 		
 		PARÂMETROS:
+			@ DATABASE *database: lista a ser buscada
+			@ const int id: id procurado
 			
 ---------------------------------------------------------*/
 

@@ -2,6 +2,7 @@
 #define __GOOGLE_H__
 
 #include "globals.h"
+#include "website.h"
 
 /*-------------------------------------------------------
 
@@ -28,7 +29,6 @@ typedef struct database {
 	
 ---------------------------------------------------------*/
 
-// Funções funcionando:
 void createDatabase(DATABASE **database);
 boolean insertWebsite(DATABASE *data, WEBSITE *node);
 WEBSITE insertKeyword(WEBSITE *site, char* newKeyword);
@@ -44,7 +44,6 @@ void relatedWebsites();
 boolean emptyList(DATABASE *database);
 void shutdown();
 
-//new function
 void writeCSVFile(DATABASE* database);
 WEBSITE* searchID(DATABASE* database, const int id);
 
