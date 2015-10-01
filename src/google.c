@@ -1,6 +1,7 @@
 #include "globals.h"
 #include "google.h"
 #include "website.h"
+#include "input.h"
 
 /*-------------------------------------------------------
 	FUNÇÕES DE MANIPULAÇÃO 
@@ -106,7 +107,6 @@ void insertKeyword(WEBSITE **site, char* newKeyword)
 	(*site)->keywords->keywords[(*site)->keywords->total] = (char*)malloc(sizeof(char) * strlen(newKeyword));
 	strcpy((*site)->keywords->keywords[(*site)->keywords->total], newKeyword);
 	(*site)->keywords->total++;
-
 }
 
 /*-------------------------------------------------------
@@ -208,37 +208,37 @@ void printList(DATABASE *data)
 
 SEARCH* searchKeyword(DATABASE *database, char *keyword)
 {
-	// começar a busca no header com nó sentinela
-	SEARCH *search;
-	search = (SEARCH*)malloc(sizeof(SEARCH));
-	search->total = 0;
-	search->results = NULL;
-
-	WEBSITE *aux = database->header->next;
-	int i, j, compare;
-	
-	for (i = 0; i < database->size; i++)
-	{
-		// percorrer keywords do website atual
-		for (j = 0; j < aux->list->total; j++) {
-
-			compare = strcmp(aux->list->keywords[j], keyword);
-
-			if (compare == 0) {
-				// TAD search: contém endereços para os sites encontrados na busca
-				search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
-				search->results[search->total] = aux;
-				search->total++;
-			}
-
-		}
-
-		aux = aux->next;
-
-	}
-
-	return search;
-
+    // começar a busca no header com nó sentinela
+    SEARCH *search;
+    search = (SEARCH*)malloc(sizeof(SEARCH));
+    search->total = 0;
+    search->results = NULL;
+    
+    WEBSITE *aux = database->header->next;
+    int i, j, compare;
+    
+    while(aux != database->header)
+    {
+        // percorrer keywords do website atual
+        for (j = 0; j < aux->keywords->total; j++) {
+            
+            compare = strcmp(aux->keywords->keywords[j], keyword);
+            
+            if (compare == 0) {
+                // TAD search: contém endereços para os sites encontrados na busca
+                search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
+                search->results[search->total] = aux;
+                search->total++;
+            }
+            
+        }
+        
+        aux = aux->next;
+        
+    }
+    
+    return search;
+    
 }
 
 /*-------------------------------------------------------
@@ -283,7 +283,7 @@ boolean emptyList(DATABASE *database) {
 
 /*-------------------------------------------------------
 
-	nome_da_funcao
+	writeCSVFile
 
 		DESCRIÇÃO:
 
@@ -291,3 +291,50 @@ boolean emptyList(DATABASE *database) {
 		PARÂMETROS:
 			
 ---------------------------------------------------------*/
+
+void writeCSVFile(DATABASE* database, const char* filename)
+{
+    FILE* csv_file = fopen(filename, "w");
+    if (csv_file == NULL)
+    {
+        printf("Could not open the file: %s\n", filename);
+        exit(0);
+    }
+    
+    WEBSITE* aux = database->header->next;
+    int i;
+    
+    while(aux != database->header)
+    {
+        fprintf(csv_file, "%d,%s,%d,%s,", aux->id, aux->name, aux->rank, aux->address);
+        for(i = 0; i < aux->keywords->total-1; i++)
+        {
+            fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+            fprintf(csv_file, ",");
+        }
+        
+        fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+        fprintf(csv_file, "\n");
+        
+        aux = aux->next;
+    }
+    
+    fclose(csv_file);
+}
+
+WEBSITE* searchID(DATABASE* database, const int id)
+{
+	WEBSITE* aux = database->header->next;
+
+	while (aux != database->header)
+	{
+		if (aux->id == id)
+		{
+			return aux;
+		}
+		aux = aux->next;
+	}
+
+	aux = NULL;
+	return aux;
+}

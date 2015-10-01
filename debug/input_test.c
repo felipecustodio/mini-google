@@ -272,6 +272,58 @@ void printCSV(DATABASE* data) {
 
 }
 
+SEARCH* searchKeyword(DATABASE *database, char *keyword)
+{
+    // começar a busca no header com nó sentinela
+    SEARCH *search;
+    search = (SEARCH*)malloc(sizeof(SEARCH));
+    search->total = 0;
+    search->results = NULL;
+    
+    WEBSITE *aux = database->header->next;
+    int i, j, compare;
+    
+    while(aux != database->header)
+    {
+        // percorrer keywords do website atual
+        for (j = 0; j < aux->keywords->total; j++) {
+            
+            compare = strcmp(aux->keywords->keywords[j], keyword);
+            
+            if (compare == 0) {
+                // TAD search: contém endereços para os sites encontrados na busca
+                search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
+                search->results[search->total] = aux;
+                search->total++;
+            }
+            
+        }
+        
+        aux = aux->next;
+        
+    }
+    
+    return search;
+    
+}
+
+WEBSITE* searchID(DATABASE* database, const int id)
+{
+    WEBSITE* aux = database->header->next;
+    
+    while (aux != database->header)
+    {
+        if (aux->id == id)
+        {
+            return aux;
+        }
+        aux = aux->next;
+    }
+    
+    aux = NULL;
+    return aux;
+}
+
 int main(int argc, char const *argv[]) {
 	DATABASE *data = NULL;
 	createDatabase(&data);
@@ -279,5 +331,17 @@ int main(int argc, char const *argv[]) {
 	//printf("Iniciando leitura de 'googlebot.csv'\n");
 	readData("googlebot.csv", &data);
 	printCSV(data);
+    
+    printf("\n\n");
+    SEARCH* test = searchKeyword(data, "reviews");
+    /*int i;
+    for(i = 0; i < test->total; i++)
+    {
+        printf("%s\n", test->results[i]->name);
+    }*/
+    
+    WEBSITE* site = searchID(data, 4);
+    printf("%s\n", site->name);
+    
 	return 0;
 }

@@ -43,4 +43,8 @@ void relatedWebsites();
 boolean emptyList(DATABASE *database);
 void shutdown();
 
+//new function
+void writeCSVFile(DATABASE* database);
+WEBSITE* searchID(DATABASE* database, const int id);
+
 #endif

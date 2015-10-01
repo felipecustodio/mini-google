@@ -229,6 +229,36 @@ void bubbleSort(DATABASE **data) {
 	}
 }
 
+void writeCSVFile(DATABASE* database, const char* filename)
+{
+    FILE* csv_file = fopen(filename, "w");
+    if (csv_file == NULL)
+    {
+        printf("Could not open the file: %s\n", filename);
+        exit(0);
+    }
+    
+    WEBSITE* aux = database->header->next;
+    int i;
+    
+    while(aux != database->header)
+    {
+        fprintf(csv_file, "%d,%s,%d,%s,", aux->id, aux->name, aux->rank, aux->address);
+        for(i = 0; i < aux->keywords->total-1; i++)
+        {
+            fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+            fprintf(csv_file, ",");
+        }
+        
+        fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+        fprintf(csv_file, "\n");
+        
+        aux = aux->next;
+    }
+    
+    fclose(csv_file);
+}
+
 
 // ********** MAIN *********
 
@@ -273,7 +303,7 @@ int main(int argc, char const *argv[])
 	web3->name = "website3";
 	web3->rank = 300;
 	web2->address = (char*)malloc(sizeof(char) * 100);
-	web2->address = "address3";
+	web3->address = "address3";
 
 	insertWebsite(data, web1);
 	insertWebsite(data, web2);
@@ -294,10 +324,13 @@ int main(int argc, char const *argv[])
 	printf("\n\n");
 
 	getchar();
-	bubbleSort(&data);
+	//bubbleSort(&data);
 
 	printf("\tPRINT DATA:\n\t");
 
+    removeWebsite(&data, web2);
+    removeWebsite(&data, web3);
+    
 	aux = data->header->next;
 	while (aux != data->header) {
 		printf("%s %d -> ", aux->name, aux->rank);
@@ -309,5 +342,8 @@ int main(int argc, char const *argv[])
 	printf("%s %d-> ", aux->name, aux->rank);
 	printf("\n\n");
 
+    removeWebsite(&data, web2);
+    removeWebsite(&data, web3);
+    writeCSVFile(data, "teste.csv");
 	return 0;
 }
