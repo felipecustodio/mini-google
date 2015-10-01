@@ -19,11 +19,19 @@ void errorCheck(void *pointer, char *pointerName) {
 #define COMMA 44
 #define ENTER 10
 
-char* readString(FILE *pointer) {
+char* readString(FILE *pointer, int flag) {
 	
 	char* string = NULL;
 	char value = '@';
+	char stop = '@';
 	int counter = 0;
+
+	if(flag) {
+		stop = COMMA;
+	} else {
+		stop = ENTER;
+	}
+
 
 	//printf("readString call\n");
 	//printf("reading: ");
@@ -36,7 +44,7 @@ char* readString(FILE *pointer) {
 		string[counter] = value;		
 		counter++;
 
-	} while (value != COMMA);
+	} while (value != stop);
 	//printf("\n");
 	//printf(" ");
 
@@ -235,12 +243,12 @@ void readData(char* filename, DATABASE **data) {
 		fscanf(googlebot, "%d", &(aux->id));
 		buffer = fgetc(googlebot);
 
-		aux->name = readString(googlebot);
+		aux->name = readString(googlebot, 1);
 
 		fscanf(googlebot, "%d", &(aux->rank));
 		buffer = fgetc(googlebot);
 
-		aux->address = readString(googlebot);
+		aux->address = readString(googlebot, 1);
 		(aux->keywords) = readKeywords(googlebot);
 
 		insertWebsite((*data), aux);

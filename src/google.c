@@ -173,6 +173,65 @@ void updateRank(WEBSITE *site)
 	getchar();
 }
 
+/*-------------------------------------------------------
+	
+		newWebsite
+
+			DESCRIÇÃO:
+				O usuário insere os dados de um novo
+				website que será colocado na lista pela
+				insertWebsite (inserção ordenada)
+	
+			PARÂMETROS:
+				@ DATABASE **data: 
+					Endereço da lista em que o site será 
+					inserido. 
+					
+---------------------------------------------------------*/
+
+void newWebsite(DATABASE **data) {
+
+	int i;
+	int keytotal = 0;
+	WEBSITE *new = NULL;
+	new = (WEBSITE*)malloc(sizeof(WEBSITE));
+
+	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
+	new->id = (*data)->header->previous->id + 1;
+
+	printf("\tINSIRA O NOME: ");
+	new->name = readString(stdin, 0);
+
+	printf("\tINSIRA O RANK: ");
+	scanf("%d", &new->rank);
+	getchar();
+
+	printf("\tINSIRA O ENDEREÇO: ");
+	new->address = readString(stdin, 0);
+
+	new->keywords = (KEYWORDS*)malloc(sizeof(KEYWORDS));
+	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
+	scanf("%d", &keytotal);
+
+	new->keywords->total = keytotal;
+
+	getchar();
+	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
+
+	printf("\tINSIRA AS KEYWORDS:\n");
+	for (i = 0; i < new->keywords->total; i++) {
+		printf("\tKEYWORD %d: ", i+1);
+		new->keywords->keywords[i] = readString(stdin, 0);
+	}
+
+	new->related = false;
+	new->next = NULL;
+	new->previous = NULL;
+
+	insertWebsite(*data, new);
+
+}
+
 //*********************************************************************************
 // *********************** FUNÇÕES ABAIXO PRECISAM SER TESTADAS *******************
 //*********************************************************************************
@@ -181,49 +240,6 @@ void updateRank(WEBSITE *site)
 //*********************************************************************************
 //*********************************************************************************
 
-
-/*-------------------------------------------------------
-	
-		newWebsite
-	
----------------------------------------------------------*/
-
-WEBSITE *newWebsite(DATABASE **data) {
-
-	int i;
-	WEBSITE *new = NULL;
-	new = (WEBSITE*)malloc(sizeof(WEBSITE));
-
-	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
-	new->id = (*data)->header->previous->id + 1;
-
-	printf("\tINSIRA O NOME: ");
-	new->name = readString(stdin);
-
-	printf("\tINSIRA O RANK: ");
-	scanf("%d", &new->rank);
-	getchar();
-	printf("\n");
-
-	printf("\tINSIRA O ENDEREÇO: ");
-	new->address = readString(stdin);
-
-	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
-	scanf("%d", &new->keywords->total);
-	getchar();
-
-	printf("\tINSIRA AS KEYWORDS: ");
-	for (i = 0; i < new->keywords->total; i++) {
-		new->keywords->keywords[i] = readString(stdin);
-	}
-
-	new->related = false;
-	new->next = NULL;
-	new->previous = NULL;
-
-	insertWebsite(&data, new);
-
-}
 
 /*-------------------------------------------------------
 	FUNÇÕES DE BUSCA POR PALAVRA-CHAVE E 

@@ -140,12 +140,12 @@ void readData(char* filename, DATABASE **data) {
 		fscanf(googlebot, "%d", &(aux->id));
 		buffer = fgetc(googlebot);
 
-		aux->name = readString(googlebot);
+		aux->name = readString(googlebot, 1);
 
 		fscanf(googlebot, "%d", &(aux->rank));
 		buffer = fgetc(googlebot);
 
-		aux->address = readString(googlebot);
+		aux->address = readString(googlebot, 1);
 		(aux->keywords) = readKeywords(googlebot);
 
 		aux->related = false;
@@ -170,13 +170,20 @@ void readData(char* filename, DATABASE **data) {
 
 }
 
-char* readString(FILE *pointer) {
+char* readString(FILE *pointer, int flag) {
 	
 	char* string = NULL;
 	// valor inicial setado em um caractere especial
 	// para não causar erros com o loop while
 	char value = '@';
+	char stop = '@';
 	int counter = 0;
+
+	if(flag) {
+		stop = COMMA;
+	} else {
+		stop = ENTER;
+	}
 
 	do {
 
@@ -185,7 +192,7 @@ char* readString(FILE *pointer) {
 		string[counter] = value;		
 		counter++;
 
-	} while (value != COMMA);
+	} while (value != stop);
 
 	// transforma o vetor de caracteres em string com final \0
 	string[counter-1] = '\0';

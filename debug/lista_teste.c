@@ -21,32 +21,31 @@ void errorCheck(void *pointer, char *pointerName) {
 #define COMMA 44
 #define ENTER 10
 
-char* readString(FILE *pointer) {
+char* readString(FILE *pointer, int flag) {
 	
 	char* string = NULL;
+	// valor inicial setado em um caractere especial
+	// para não causar erros com o loop while
 	char value = '@';
+	char stop = '@';
 	int counter = 0;
 
-
-	//printf("readString call\n");
-	//printf("reading: ");
+	if(flag) {
+		stop = COMMA;
+	} else {
+		stop = ENTER;
+	}
 
 	do {
-		//  && value != ENTER
-		if (pointer == NULL) {
-			scanf("%c", &value);
-		} else {
+
 		fscanf(pointer, "%c", &value);
-		}
-		//printf("%c", value);
 		string = (char*)realloc(string, sizeof(char) * counter + 1);
 		string[counter] = value;		
 		counter++;
 
+	} while (value != stop);
 
-	} while (value != ENTER);
-	//printf("\n");
-	//printf(" ");
+	// transforma o vetor de caracteres em string com final \0
 	string[counter-1] = '\0';
 
 	return string;
@@ -224,43 +223,48 @@ void printList(DATABASE *data) {
 	
 ---------------------------------------------------------*/
 
-// void newWebsite(DATABASE **data) {
+void newWebsite(DATABASE **data) {
 
-// 	int i;
-// 	WEBSITE *new = NULL;
-// 	new = (WEBSITE*)malloc(sizeof(WEBSITE));
+	int i;
+	int keytotal = 0;
+	WEBSITE *new = NULL;
+	new = (WEBSITE*)malloc(sizeof(WEBSITE));
 
-// 	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
-// 	new->id = (*data)->header->previous->id + 1;
+	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
+	new->id = (*data)->header->previous->id + 1;
 
-// 	printf("\tINSIRA O NOME: ");
-// 	new->name = readString(stdin);
+	printf("\tINSIRA O NOME: ");
+	new->name = readString(stdin, 0);
 
-// 	printf("\tINSIRA O RANK: ");
-// 	scanf("%d", &new->rank);
-// 	getchar();
-// 	printf("\n");
+	printf("\tINSIRA O RANK: ");
+	scanf("%d", &new->rank);
+	getchar();
 
-// 	printf("\tINSIRA O ENDEREÇO: ");
-// 	new->address = readString(stdin);
+	printf("\tINSIRA O ENDEREÇO: ");
+	new->address = readString(stdin, 0);
 
-// 	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
-// 	scanf("%d", &new->keywords->total);
-// 	getchar();
-// 	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
+	new->keywords = (KEYWORDS*)malloc(sizeof(KEYWORDS));
+	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
+	scanf("%d", &keytotal);
 
-// 	printf("\tINSIRA AS KEYWORDS: ");
-// 	for (i = 0; i < new->keywords->total; i++) {
-// 		new->keywords->keywords[i] = readString(stdin);
-// 	}
+	new->keywords->total = keytotal;
 
-// 	new->related = false;
-// 	new->next = NULL;
-// 	new->previous = NULL;
+	getchar();
+	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
 
-// 	insertWebsite(*data, new);
+	printf("\tINSIRA AS KEYWORDS:\n");
+	for (i = 0; i < new->keywords->total; i++) {
+		printf("\tKEYWORD %d: ", i+1);
+		new->keywords->keywords[i] = readString(stdin, 0);
+	}
 
-// }
+	new->related = false;
+	new->next = NULL;
+	new->previous = NULL;
+
+	insertWebsite(*data, new);
+
+}
 
 
 // ********** MAIN *********
@@ -347,21 +351,21 @@ int main(int argc, char const *argv[])
 
 	getchar();
 
-	//printf("\tNEW WEBSITE:\n");
-	//newWebsite(&data);
+	printf("\tNEW WEBSITE:\n");
+	newWebsite(&data);
 
-	//printf("\tPRINT DATA:\n\t");
+	printf("\tPRINT DATA:\n\t");
 
-	// aux = data->header->next;
-	// while (aux != data->header) {
-	// 	printf("%s %d -> ", aux->name, aux->rank);
-	// 	aux = aux->next;	
-	// }
+	aux = data->header->next;
+	while (aux != data->header) {
+	 	printf("%s %d -> ", aux->name, aux->rank);
+	 	aux = aux->next;	
+	}
 
-	// printf("%s %d -> ", aux->name, aux->rank);
-	// aux = aux->next;
-	// printf("%s %d-> ", aux->name, aux->rank);
-	// printf("\n\n");
+	printf("%s %d -> ", aux->name, aux->rank);
+	aux = aux->next;
+	printf("%s %d-> ", aux->name, aux->rank);
+	printf("\n\n");
 
 
 	printList(data);
