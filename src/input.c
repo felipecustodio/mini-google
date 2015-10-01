@@ -25,28 +25,32 @@
 char* readString(FILE *pointer, int flag) {
 	
 	char* string = NULL;
-	// valor inicial setado em um caractere especial
-	// para não causar erros com o loop while
 	char value = '@';
 	char stop = '@';
 	int counter = 0;
 
 	if(flag) {
-		stop = COMMA;
+		stop = ',';
 	} else {
-		stop = ENTER;
+		stop = '\n';
 	}
 
-	do {
 
+	//printf("readString call\n");
+	//printf("reading: ");
+
+	do {
+		//  && value != ENTER
 		fscanf(pointer, "%c", &value);
+		//printf("%c", value);
 		string = (char*)realloc(string, sizeof(char) * counter + 1);
 		string[counter] = value;		
 		counter++;
 
 	} while (value != stop);
+	//printf("\n");
+	//printf(" ");
 
-	// transforma o vetor de caracteres em string com final \0
 	string[counter-1] = '\0';
 
 	return string;

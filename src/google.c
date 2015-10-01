@@ -153,11 +153,10 @@ boolean removeWebsite(DATABASE **data, WEBSITE *removal)
 void updateRank(WEBSITE *site)
 {
 	int newRank = 0;
-	printf("\tINSIRA O NOVO RANK DE %s:\n", site->name);
+	printf("\tINSIRA O NOVO RANK DE %s: ", site->name);
 	scanf("%d", &newRank);
 	site->rank = newRank;
 	printf("\tRANK ATUALIZADO COM SUCESSO\n");
-	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n");
 	getchar();
 }
 
@@ -286,25 +285,21 @@ void relatedWebsites(DATABASE* database, SEARCH* search, char *keyword)
 {
     KEYWORDS* keylist = (KEYWORDS*) malloc(sizeof(KEYWORDS));
     keylist->keywords	= (char**) malloc(sizeof(char*) * search->total);
+    keylist->total = 0;
     
     int i;
     for(i = 0; i < search->total; i++)
     {
         //pegando uma palavra por site para buscar relacionados
-        if (strcmp(keyword, search->results[i]->keywords->keywords[i]))
+        if (strcmp(keyword, search->results[i]->keywords->keywords[0]))
             keylist->keywords[i] = search->results[i]->keywords->keywords[i];
         else
         {
-            if (i > 0)
-            {
-                keylist->keywords[i] = search->results[i]->keywords->keywords[i-1];
-            }
-            else
-            {
-                keylist->keywords[i] = search->results[i]->keywords->keywords[i+1];
-            }
+
+            keylist->keywords[i] = search->results[i]->keywords->keywords[1];
+                     
         }
-        
+        keylist->total++;
     }
     
     WEBSITE* aux = database->header->next;
@@ -431,9 +426,6 @@ WEBSITE* searchID(DATABASE* database, const int id)
 	return aux;
 }
 
-
-
-
 /*-------------------------------------------------------
 
 	readKeywords(FILE *googlebot)
@@ -536,34 +528,35 @@ KEYWORDS* readKeywords(FILE *googlebot) {
 ---------------------------------------------------------*/
 
 void readData(char* filename, DATABASE **data) {
-
-	long int contaBytes = 0; // controlador do laço de leitura
-	long int totalBytes = 0; // condição de parada da leitura
-	char buffer;
 	
-	/*-------------------------------------------------------
-		ABRIR ARQUIVO
-	---------------------------------------------------------*/
+	// printHeader();
+
+	// WEBSITE *aux = NULL;
+
+	int counter = 0;
 
 	FILE *googlebot = fopen(filename, "r");
+
+	long int contaBytes = 0;
+	long int totalBytes = 0;
+	char buffer;
+	int i, j;
+	fseek(googlebot, 0L, SEEK_END);
+	totalBytes = ftell(googlebot);
+	rewind(googlebot);
 
 	if(googlebot == NULL) {
 		printf("O arquivo CSV não pôde ser aberto. Saindo...\n");
 		exit(0);
 	}
-	
-	// contador de bytes do arquivo
-	fseek(googlebot, 0L, SEEK_END);
-	totalBytes = ftell(googlebot);
-	rewind(googlebot);
 
-	// loop de leitura
 	do {
 
 		WEBSITE *aux = NULL;
 
 		if (aux == NULL) {
 			aux = (WEBSITE*)malloc(sizeof(WEBSITE));
+
 		}	
 
 		fscanf(googlebot, "%d", &(aux->id));
@@ -577,24 +570,61 @@ void readData(char* filename, DATABASE **data) {
 		aux->address = readString(googlebot, 1);
 		(aux->keywords) = readKeywords(googlebot);
 
-		aux->related = false;
-
-		// inserir nó auxiliar na lista definitiva
 		insertWebsite((*data), aux);
 
-		// seta o contador de bytes para a posição atual
 		contaBytes = ftell(googlebot);
 
 	} while((!feof(googlebot)) && (contaBytes < totalBytes - 1));
 
-	// SOBRE O FUNCIONAMENTO DO LOOP DE LEITURA: 
-	// loop de leitura vai até o penúltimo byte (antes do \n final)
-	// como usamos uma função auxiliar para ler strings, utilizar apenas o 
-	// feof causa um erro, pois ao chegar no caractere EOF, a função é chamada
-	// e tenta ler uma região do arquivo inexistente.
-
 	fclose(googlebot);
 
-	// LIBERAR MEMÓRIA!!!
+}
+
+void printWebsite(WEBSITE *print) {
+
+	int i;
+	printf("\t");
+	printf("ID: %d ", print->id);
+	printf("NOME: %s ", print->name);
+	printf("RANK: %d ", print->rank);
+	printf("URL: %s ", print->address);
+	printf("PALAVRAS-CHAVE: ");
+	for (i = 0; i < print->keywords->total; i++) {	
+		printf("%s ", print->keywords->keywords[i]);
+	}
+	printf("\n");
+
+}
+
+void printList(DATABASE *data) {
+
+	WEBSITE *aux = NULL;
+	aux = data->header->next;
+	while (aux != data->header) {
+		printWebsite(aux);
+		aux = aux->next;
+	}
+}
+
+void printSearch(SEARCH *search, DATABASE *data) {
+
+	int i;
+	printf("\tRESULTADO DA BUSCA:\n");
+	for (i = 0; i < search->total; i++) {
+		printWebsite(search->results[i]);
+		search->results[i]->related = false;
+	}
+	printf("\n\n");
+	printf("\tSITES RELACIONADOS:\n");
+	WEBSITE *aux = NULL;
+	aux = data->header->next;
+	while (aux != data->header) {
+		if(aux->related) {
+			printWebsite(aux);
+		}
+		aux = aux->next;
+	}
+
+
 
 }

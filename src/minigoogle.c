@@ -45,14 +45,22 @@ typedef enum operation
 
 int main(int argc, char const *argv[]) {
  	
+ 	// VARIÁVEIS AUXILIARES DE MENU
  	int aux;
+ 	int id;
+ 	int newRank;
+ 	WEBSITE *auxWeb = NULL;
+ 	SEARCH *auxSearch = NULL;
+ 	char *auxString = NULL;
+
  	Operation operation;
 
  	printHeader();
  	printf("\tINICIALIZANDO PROGRAMA...\n");
  	DATABASE *data = NULL;
  	createDatabase(&data);
- 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n");
+ 	readData("googlebot.csv", &data);
+ 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n\t");
  	getchar();
 
 	do
@@ -76,24 +84,41 @@ int main(int argc, char const *argv[]) {
 				// Remover um site da lista
 				printHeader();
 				printf("\n\n\t*** REMOVER WEBSITE ***\n\n");
+				printf("\tDIGITE O ID A SER REMOVIDO: ");
+				scanf("%d", &id);
+				auxWeb = searchID(data, id);
+				removeWebsite(&data, auxWeb);
 				break;
 			
 			case insertKeyWord:
 				// Inserir palavra-chave em um site
 				printHeader();
 				printf("\n\n\t*** NOVA KEYWORD ***\n\n");
+				printf("\tDIGITE O ID A SER ALTERADO: ");
+				scanf("%d", &id);
+				getchar();
+				auxWeb = searchID(data, id);
+				printf("\tDIGITE A NOVA KEYWORD: ");
+				auxString = readString(stdin, 0);
+				insertKeyword(&auxWeb, auxString);
 				break;
 			
 			case updatePagerank:
 				// Atualizar relevância de um site
 				printHeader();
 				printf("\n\n\t*** ATUALIZAR RELEVÂNCIA ***\n\n");
+				printf("\tDIGITE O ID A SER ALTERADO: ");
+				scanf("%d", &id);
+				getchar();
+				auxWeb = searchID(data, id);
+				updateRank(auxWeb);
 				break;
 			
 			case showList:
 				// Exibir lista
 				printHeader();
 				printf("\n\n\t*** EXIBIR LISTA ***\n\n");
+				printList(data);
 				break;
 
 			case searchByKey:
@@ -101,6 +126,11 @@ int main(int argc, char const *argv[]) {
 				// Exibir sugestão de sites
 				printHeader();
 				printf("\n\n\t*** BUSCA ***\n\n");
+				printf("\tDIGITE A KEYWORD A SER BUSCADA: ");
+				auxString = readString(stdin, 0);
+				auxSearch = searchKeyword(data, auxString);
+				relatedWebsites(data, auxSearch, auxString);
+				printSearch(auxSearch, data);
 				break;
 
 			case close:
