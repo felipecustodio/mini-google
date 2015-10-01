@@ -5,7 +5,7 @@ CC = gcc
 BINARY = ./build/miniGoogle
 
 #sources directory
-SRC = src/google.c src/input.c src/menu.c src/minigoogle.c
+SRC = src/minigoogle.c src/google.c src/input.c src/menu.c 
 
 #includes directory
 INCLUDES = ./includes

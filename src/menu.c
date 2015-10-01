@@ -1,13 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "menu.h"
-#include "google.h"
-
 /*-------------------------------------------------------
 
 	MENU
 	
 ---------------------------------------------------------*/
+
+#include "menu.h"
 
 void printHeader(void)
 {

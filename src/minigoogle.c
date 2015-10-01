@@ -21,17 +21,25 @@ Nº USP	:	9442688
 Data:		01/09/2015
 ---------------------------------------------------------*/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "google.h"
+#include "website.h"
+#include "input.h"
 #include "globals.h"
+#include "menu.h"
 
 typedef enum operation
 {
 	insertWebSite = 1,
 	removeWebSite,
 	insertKeyWord,
-	updateRank,
+	updatePagerank,
 	showList,
 	searchByKey,
-	shutdown
+	close
 
 } Operation;
 
@@ -60,7 +68,7 @@ int main(int argc, char const *argv[]) {
 			case insertWebSite:
 				// Inserir novo site
 				printHeader();
-				newWebsite(data);
+				newWebsite(&data);
 				printf("\n\n\t*** NOVO WEBSITE ***\n\n");
 				break;
 			
@@ -76,7 +84,7 @@ int main(int argc, char const *argv[]) {
 				printf("\n\n\t*** NOVA KEYWORD ***\n\n");
 				break;
 			
-			case updateRank:
+			case updatePagerank:
 				// Atualizar relevância de um site
 				printHeader();
 				printf("\n\n\t*** ATUALIZAR RELEVÂNCIA ***\n\n");
@@ -95,7 +103,7 @@ int main(int argc, char const *argv[]) {
 				printf("\n\n\t*** BUSCA ***\n\n");
 				break;
 
-			case shutdown:
+			case close:
 				// Liberar memória
 				// Finalizar o programa
 				printHeader();
@@ -106,7 +114,7 @@ int main(int argc, char const *argv[]) {
 		printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR");
 		getchar();
 
-	} while(operation != shutdown);
+	} while(operation != close);
 
 	return 0;
 }

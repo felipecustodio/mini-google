@@ -16,6 +16,7 @@
 #include "google.h"
 #include "website.h"
 #include "input.h"
+#include "globals.h"
 #include "menu.h"
 
 /*-------------------------------------------------------

@@ -1,8 +1,14 @@
 #ifndef __GOOGLE_H__
 #define __GOOGLE_H__
 
-#include "globals.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "google.h"
 #include "website.h"
+#include "globals.h"
+#include "menu.h"
 
 /*-------------------------------------------------------
 
@@ -31,20 +37,18 @@ typedef struct database {
 
 void createDatabase(DATABASE **database);
 boolean insertWebsite(DATABASE *data, WEBSITE *node);
-WEBSITE insertKeyword(WEBSITE *site, char* newKeyword);
+void insertKeyword(WEBSITE **site, char* newKeyword);
 boolean removeWebsite(DATABASE **data, WEBSITE *removal);
 void updateRank(WEBSITE *site);
-
-WEBSITE *newWebsite();
-
-void printList();
-void searchKeyword(DATABASE *database, char *keyword);
-WEBSITE* searchID(DATABASE* database, const int id);
-void relatedWebsites();
+void newWebsite(DATABASE **data);
+SEARCH* searchKeyword(DATABASE *database, char *keyword);
+void relatedWebsites(DATABASE* database, SEARCH* search, char *keyword);
 boolean emptyList(DATABASE *database);
-void shutdown();
-
-void writeCSVFile(DATABASE* database);
+void writeCSVFile(DATABASE* database, const char* filename);
 WEBSITE* searchID(DATABASE* database, const int id);
+
+KEYWORDS* readKeywords(FILE *googlebot);
+void readData(char* filename, DATABASE **data);
+
 
 #endif
