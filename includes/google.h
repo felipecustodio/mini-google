@@ -1,7 +1,6 @@
 #ifndef __GOOGLE_H__
 #define __GOOGLE_H__
 
-#include "website.h"
 #include "globals.h"
 
 /*-------------------------------------------------------
@@ -35,9 +34,6 @@ boolean insertWebsite(DATABASE *data, WEBSITE *node);
 WEBSITE insertKeyword(WEBSITE *site, char* newKeyword);
 boolean removeWebsite(DATABASE **data, WEBSITE *removal);
 void updateRank(WEBSITE *site);
-
-// Funções para terminar/testar:
-
 
 WEBSITE *newWebsite();
 

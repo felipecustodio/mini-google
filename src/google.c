@@ -83,15 +83,6 @@ boolean insertWebsite(DATABASE *data, WEBSITE *node)
 		return false;
 }
 
-
-/*-------------------------------------------------------
-
-
----------------------------------------------------------*/
-
-// WEBSITE *newWebsite();
-
-
 /*-------------------------------------------------------
 
 	insertKeyword
@@ -186,7 +177,7 @@ void updateRank(WEBSITE *site)
 				@ DATABASE **data: 
 					Endereço da lista em que o site será 
 					inserido. 
-					
+
 ---------------------------------------------------------*/
 
 void newWebsite(DATABASE **data) {
@@ -232,92 +223,15 @@ void newWebsite(DATABASE **data) {
 
 }
 
-//*********************************************************************************
-// *********************** FUNÇÕES ABAIXO PRECISAM SER TESTADAS *******************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-
-
-/*-------------------------------------------------------
-	FUNÇÕES DE BUSCA POR PALAVRA-CHAVE E 
-	EXIBIÇÃO DE SITES RELACIONADOS
----------------------------------------------------------*/
-
 /*-------------------------------------------------------
 
-	nome_da_funcao
+	emptyList	
 
 		DESCRIÇÃO:
-
+			Verifica se a lista possui nós.
 		
 		PARÂMETROS:
-			
----------------------------------------------------------*/
-
-SEARCH* searchKeyword(DATABASE *database, char *keyword)
-{
-	// começar a busca no header com nó sentinela
-	SEARCH *search;
-	search = (SEARCH*)malloc(sizeof(SEARCH));
-	search->total = 0;
-	search->results = NULL;
-
-	WEBSITE *aux = database->header->next;
-	int i, j, compare;
-	
-	for (i = 0; i < database->size; i++)
-	{
-		// percorrer keywords do website atual
-		for (j = 0; j < aux->list->total; j++) {
-
-			compare = strcmp(aux->list->keywords[j], keyword);
-
-			if (compare == 0) {
-				// TAD search: contém endereços para os sites encontrados na busca
-				search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
-				search->results[search->total] = aux;
-				search->total++;
-			}
-
-		}
-
-		aux = aux->next;
-
-	}
-
-	return search;
-
-}
-
-/*-------------------------------------------------------
-
-	nome_da_funcao
-
-		DESCRIÇÃO:
-
-		
-		PARÂMETROS:
-			
----------------------------------------------------------*/
-
-void relatedWebsites()
-{
-	
-// ********************
-
-}
-
-/*-------------------------------------------------------
-
-	nome_da_funcao
-
-		DESCRIÇÃO:
-
-		
-		PARÂMETROS:
+			DATABASE *database: lista a ser verificada
 			
 ---------------------------------------------------------*/
 
@@ -328,15 +242,4 @@ boolean emptyList(DATABASE *database) {
 	} else {
 		return false;
 	}
-}
-
-/*-------------------------------------------------------
-
-	nome_da_funcao
-
-		DESCRIÇÃO:
-
-		
-		PARÂMETROS:
-			
----------------------------------------------------------*/
+}/

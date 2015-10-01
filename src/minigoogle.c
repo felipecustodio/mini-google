@@ -73,45 +73,45 @@ int main(int argc, char const *argv[]) {
 				// Inserir novo site
 				printHeader();
 				newWebsite(data);
-				printf("\n\n\tOPCAO 1\n\n");
+				printf("\n\n\t*** NOVO WEBSITE ***\n\n");
 				break;
 			
 			case removeWebSite:
-				// Inserir palavra-chave em um site
+				// Remover um site da lista
 				printHeader();
-				printf("\n\n\tOPCAO 2\n\n");
+				printf("\n\n\t*** REMOVER WEBSITE ***\n\n");
 				break;
 			
 			case insertKeyWord:
-				// Remover um site da lista
+				// Inserir palavra-chave em um site
 				printHeader();
-				printf("\n\n\tOPCAO 3\n\n");
+				printf("\n\n\t*** NOVA KEYWORD ***\n\n");
 				break;
 			
 			case updateRank:
 				// Atualizar relevância de um site
 				printHeader();
-				printf("\n\n\tOPCAO 4\n\n");
+				printf("\n\n\t*** ATUALIZAR RELEVÂNCIA ***\n\n");
 				break;
 			
 			case showList:
 				// Exibir lista
 				printHeader();
-				printf("\n\n\tOPCAO 5\n\n");
+				printf("\n\n\t*** EXIBIR LISTA ***\n\n");
 				break;
 
 			case searchByKey:
 				// Busca por palavra-chave
 				// Exibir sugestão de sites
 				printHeader();
-				printf("\n\n\tOPCAO 6\n\n");
+				printf("\n\n\t*** BUSCA ***\n\n");
 				break;
 
 			case shutdown:
 				// Liberar memória
 				// Finalizar o programa
 				printHeader();
-				printf("\n\n\tOPCAO 7\n\n");
+				printf("\n\n\t*** FINALIZAR ***\n\n");
 				break;
 		}
 
