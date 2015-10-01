@@ -324,6 +324,59 @@ WEBSITE* searchID(DATABASE* database, const int id)
     return aux;
 }
 
+void relatedWebsites(DATABASE* database, SEARCH* search, char *keyword)
+{
+    KEYWORDS* keylist = (KEYWORDS*) malloc(sizeof(KEYWORDS));
+    keylist->keywords	= (char**) malloc(sizeof(char*) * search->total);
+    
+    int i;
+    for(i = 0; i < search->total; i++)
+    {
+        //pegando uma palavra por site para buscar relacionados
+        if (strcmp(keyword, search->results[i]->keywords->keywords[i]))
+            keylist->keywords[i] = search->results[i]->keywords->keywords[i];
+        else
+        {
+            if (i > 0)
+            {
+                keylist->keywords[i] = search->results[i]->keywords->keywords[i-1];
+            }
+            else
+            {
+                keylist->keywords[i] = search->results[i]->keywords->keywords[i+1];
+            }
+        }
+        
+    }
+    
+    WEBSITE* aux = database->header->next;
+    
+    int j;
+    while(aux != database->header)
+    {
+        for(i = 0; i < keylist->total; i++)
+        {
+            for(j = 0; j < aux->keywords->total; j++)
+            {
+                if(strcmp(keylist->keywords[i], aux->keywords->keywords[j]))
+                {
+                    aux->related = true;
+                }
+            }
+        }
+        
+        aux = aux->next;
+    }
+    
+    for(i = 0; i < search->total; i++)
+    {
+        search->results[i]->related = false;
+    }
+    
+    free(keylist->keywords);
+    free(keylist);
+}
+
 int main(int argc, char const *argv[]) {
 	DATABASE *data = NULL;
 	createDatabase(&data);
@@ -334,14 +387,12 @@ int main(int argc, char const *argv[]) {
     
     printf("\n\n");
     SEARCH* test = searchKeyword(data, "reviews");
-    /*int i;
+    int i;
     for(i = 0; i < test->total; i++)
     {
         printf("%s\n", test->results[i]->name);
-    }*/
-    
-    WEBSITE* site = searchID(data, 4);
-    printf("%s\n", site->name);
+    }
+    relatedWebsites(data, test, "reviews");
     
 	return 0;
 }
