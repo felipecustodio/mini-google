@@ -190,48 +190,77 @@ void updateRank(WEBSITE *site, int newRank)
 
 }
 
+void printWebsite(WEBSITE *print) {
+
+	int i;
+	printf("\t");
+	printf("ID: %d ", print->id);
+	printf("NOME: %s ", print->name);
+	printf("RANK: %d ", print->rank);
+	printf("URL: %s ", print->address);
+	printf("PALAVRAS-CHAVE: ");
+	for (i = 0; i < print->keywords->total; i++) {	
+		printf("%s ", print->keywords->keywords[i]);
+	}
+	printf("\n");
+
+}
+
+
+void printList(DATABASE *data) {
+
+	WEBSITE *aux = NULL;
+	aux = data->header->next;
+	while (aux != data->header) {
+		printWebsite(aux);
+		aux = aux->next;
+	}
+}
+
+
 /*-------------------------------------------------------
 	
 		newWebsite
 	
 ---------------------------------------------------------*/
 
-void newWebsite(DATABASE **data) {
+// void newWebsite(DATABASE **data) {
 
-	int i;
-	WEBSITE *new = NULL;
-	new = (WEBSITE*)malloc(sizeof(WEBSITE));
+// 	int i;
+// 	WEBSITE *new = NULL;
+// 	new = (WEBSITE*)malloc(sizeof(WEBSITE));
 
-	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
-	new->id = (*data)->header->previous->id + 1;
+// 	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
+// 	new->id = (*data)->header->previous->id + 1;
 
-	printf("\tINSIRA O NOME: ");
-	new->name = readString(stdin);
+// 	printf("\tINSIRA O NOME: ");
+// 	new->name = readString(stdin);
 
-	printf("\tINSIRA O RANK: ");
-	scanf("%d", &new->rank);
-	printf("\n");
+// 	printf("\tINSIRA O RANK: ");
+// 	scanf("%d", &new->rank);
+// 	getchar();
+// 	printf("\n");
 
-	printf("\tINSIRA O ENDEREÇO: ");
-	new->address = readString(stdin);
+// 	printf("\tINSIRA O ENDEREÇO: ");
+// 	new->address = readString(stdin);
 
-	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
-	scanf("%d", &new->keywords->total);
-	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
+// 	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
+// 	scanf("%d", &new->keywords->total);
+// 	getchar();
+// 	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
 
-	printf("\tINSIRA AS KEYWORDS: ");
-	for (i = 0; i < new->keywords->total; i++) {
+// 	printf("\tINSIRA AS KEYWORDS: ");
+// 	for (i = 0; i < new->keywords->total; i++) {
+// 		new->keywords->keywords[i] = readString(stdin);
+// 	}
 
-		new->keywords->keywords[i] = readString(stdin);
-	}
+// 	new->related = false;
+// 	new->next = NULL;
+// 	new->previous = NULL;
 
-	new->related = false;
-	new->next = NULL;
-	new->previous = NULL;
+// 	insertWebsite(*data, new);
 
-	insertWebsite(*data, new);
-
-}
+// }
 
 
 // ********** MAIN *********
@@ -271,13 +300,32 @@ int main(int argc, char const *argv[])
 	web2->rank = 200;
 	web2->address = (char*)malloc(sizeof(char) * 100);
 	web2->address = "address2";
+	keylist->keywords = NULL;
+	keylist->total = 0;
+	keylist->keywords = (char**)realloc(keylist->keywords, sizeof(char*) * (2));
+	keylist->keywords[0] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[1] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[0] = "key1";
+	keylist->keywords[1] = "key2";
+	keylist->total = 2;
+	web2->keywords = keylist;
+
 	WEBSITE *web3 = (WEBSITE*)malloc(sizeof(WEBSITE));
 	web3->id = 3;
 	web3->name = (char*)malloc(sizeof(char) * 100);
 	web3->name = "website3";
 	web3->rank = 300;
-	web2->address = (char*)malloc(sizeof(char) * 100);
-	web2->address = "address3";
+	web3->address = (char*)malloc(sizeof(char) * 100);
+	web3->address = "address3";
+	keylist->keywords = NULL;
+	keylist->total = 0;
+	keylist->keywords = (char**)realloc(keylist->keywords, sizeof(char*) * (2));
+	keylist->keywords[0] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[1] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[0] = "key1";
+	keylist->keywords[1] = "key2";
+	keylist->total = 2;
+	web3->keywords = keylist;
 
 	insertWebsite(data, web1);
 	insertWebsite(data, web2);
@@ -299,21 +347,25 @@ int main(int argc, char const *argv[])
 
 	getchar();
 
-	printf("\tNEW WEBSITE:\n");
-	newWebsite(&data);
+	//printf("\tNEW WEBSITE:\n");
+	//newWebsite(&data);
 
-	printf("\tPRINT DATA:\n\t");
+	//printf("\tPRINT DATA:\n\t");
 
-	aux = data->header->next;
-	while (aux != data->header) {
-		printf("%s %d -> ", aux->name, aux->rank);
-		aux = aux->next;	
-	}
+	// aux = data->header->next;
+	// while (aux != data->header) {
+	// 	printf("%s %d -> ", aux->name, aux->rank);
+	// 	aux = aux->next;	
+	// }
 
-	printf("%s %d -> ", aux->name, aux->rank);
-	aux = aux->next;
-	printf("%s %d-> ", aux->name, aux->rank);
-	printf("\n\n");
+	// printf("%s %d -> ", aux->name, aux->rank);
+	// aux = aux->next;
+	// printf("%s %d-> ", aux->name, aux->rank);
+	// printf("\n\n");
+
+
+	printList(data);
+
 
 	return 0;
 }

@@ -148,6 +148,8 @@ void readData(char* filename, DATABASE **data) {
 		aux->address = readString(googlebot);
 		(aux->keywords) = readKeywords(googlebot);
 
+		aux->related = false;
+
 		// inserir nó auxiliar na lista definitiva
 		insertWebsite((*data), aux);
 

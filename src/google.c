@@ -83,6 +83,15 @@ boolean insertWebsite(DATABASE *data, WEBSITE *node)
 		return false;
 }
 
+
+/*-------------------------------------------------------
+
+
+---------------------------------------------------------*/
+
+// WEBSITE *newWebsite();
+
+
 /*-------------------------------------------------------
 
 	insertKeyword
@@ -153,40 +162,66 @@ boolean removeWebsite(DATABASE **data, WEBSITE *removal)
 
 ---------------------------------------------------------*/
 
-void updateRank(WEBSITE *site, int newRank)
+void updateRank(WEBSITE *site)
 {
+	int newRank = 0;
+	printf("\tINSIRA O NOVO RANK DE %s:\n", site->name);
+	scanf("%d", newRank);
 	site->rank = newRank;
-
+	printf("\tRANK ATUALIZADO COM SUCESSO\n");
+	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n");
+	getchar();
 }
 
-
-// *********************** FUNÇÕES ABAIXO PRECISAM SER TESTADAS ***************************
-//***************************
-//***************************
-//***************************
-//***************************
-//***************************
+//*********************************************************************************
+// *********************** FUNÇÕES ABAIXO PRECISAM SER TESTADAS *******************
+//*********************************************************************************
+//*********************************************************************************
+//*********************************************************************************
+//*********************************************************************************
+//*********************************************************************************
 
 
 /*-------------------------------------------------------
-
-	nome_da_funcao
-
-		DESCRIÇÃO:
-
-		
-		PARÂMETROS:
-			
+	
+		newWebsite
+	
 ---------------------------------------------------------*/
 
-void printList(DATABASE *data) 
-{
+WEBSITE *newWebsite(DATABASE **data) {
 
-	WEBSITE *aux = NULL;
-	aux = data->header->next;
-	while (aux != data->header) {
-		// print website
+	int i;
+	WEBSITE *new = NULL;
+	new = (WEBSITE*)malloc(sizeof(WEBSITE));
+
+	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
+	new->id = (*data)->header->previous->id + 1;
+
+	printf("\tINSIRA O NOME: ");
+	new->name = readString(stdin);
+
+	printf("\tINSIRA O RANK: ");
+	scanf("%d", &new->rank);
+	getchar();
+	printf("\n");
+
+	printf("\tINSIRA O ENDEREÇO: ");
+	new->address = readString(stdin);
+
+	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
+	scanf("%d", &new->keywords->total);
+	getchar();
+
+	printf("\tINSIRA AS KEYWORDS: ");
+	for (i = 0; i < new->keywords->total; i++) {
+		new->keywords->keywords[i] = readString(stdin);
 	}
+
+	new->related = false;
+	new->next = NULL;
+	new->previous = NULL;
+
+	insertWebsite(&data, new);
 
 }
 
@@ -278,8 +313,6 @@ boolean emptyList(DATABASE *database) {
 		return false;
 	}
 }
-
-
 
 /*-------------------------------------------------------
 

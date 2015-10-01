@@ -52,6 +52,13 @@ int main(int argc, char const *argv[]) {
  	int aux;
  	Operation operation;
 
+ 	printHeader();
+ 	printf("\tINICIALIZANDO PROGRAMA...\n");
+ 	DATABASE *data = NULL;
+ 	createDatabase(&data);
+ 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n");
+ 	getchar();
+
 	do
 	{
 		printMainMenu();
@@ -65,6 +72,7 @@ int main(int argc, char const *argv[]) {
 			case insertWebSite:
 				// Inserir novo site
 				printHeader();
+				newWebsite(data);
 				printf("\n\n\tOPCAO 1\n\n");
 				break;
 			
