@@ -27,21 +27,26 @@ char* readString(FILE *pointer) {
 	char value = '@';
 	int counter = 0;
 
+
 	//printf("readString call\n");
 	//printf("reading: ");
 
 	do {
 		//  && value != ENTER
+		if (pointer == NULL) {
+			scanf("%c", &value);
+		} else {
 		fscanf(pointer, "%c", &value);
+		}
 		//printf("%c", value);
 		string = (char*)realloc(string, sizeof(char) * counter + 1);
 		string[counter] = value;		
 		counter++;
 
-	} while (value != COMMA);
+
+	} while (value != ENTER);
 	//printf("\n");
 	//printf(" ");
-
 	string[counter-1] = '\0';
 
 	return string;
@@ -185,48 +190,47 @@ void updateRank(WEBSITE *site, int newRank)
 
 }
 
-void swap(WEBSITE *i, WEBSITE *j) {
-
-	// *********** CORRIGIR SWAP ***************
-	i->next = j->next;
-	i->previous = j;
-	j->next = i;
-	j->previous = i->previous;
-
-}
-
-void bubbleSort(DATABASE **data) {
+/*-------------------------------------------------------
 	
-	int i,j;
-	WEBSITE *aux = NULL;
-	WEBSITE *aux2 = NULL;
+		newWebsite
+	
+---------------------------------------------------------*/
 
-	aux = (*data)->header->next;
-	aux2 = (*data)->header->next->next;
+void newWebsite(DATABASE **data) {
 
-	while (aux2 != (*data)->header) {
+	int i;
+	WEBSITE *new = NULL;
+	new = (WEBSITE*)malloc(sizeof(WEBSITE));
 
-		printf("\tCOMPARE %s %d VS %s %d\n", aux->name, aux->rank, aux2->name, aux2->rank);
-		if((aux->rank) < (aux2->rank)) {
-			printf("\tSWAP\n");
-			swap(aux, aux2);
-			aux = (*data)->header->next;
-			while (aux != (*data)->header) {
-				printf("%s %d -> ", aux->name, aux->rank);
-				aux = aux->next;	
-			}
+	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
+	new->id = (*data)->header->previous->id + 1;
 
-			printf("%s %d -> ", aux->name, aux->rank);
-			aux = aux->next;
-			printf("%s %d-> ", aux->name, aux->rank);
-			printf("\n\n");
+	printf("\tINSIRA O NOME: ");
+	new->name = readString(stdin);
 
-		}
+	printf("\tINSIRA O RANK: ");
+	scanf("%d", &new->rank);
+	printf("\n");
 
-		aux = aux->next;
-		aux2 = aux2->next;
+	printf("\tINSIRA O ENDEREÇO: ");
+	new->address = readString(stdin);
 
+	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
+	scanf("%d", &new->keywords->total);
+	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
+
+	printf("\tINSIRA AS KEYWORDS: ");
+	for (i = 0; i < new->keywords->total; i++) {
+
+		new->keywords->keywords[i] = readString(stdin);
 	}
+
+	new->related = false;
+	new->next = NULL;
+	new->previous = NULL;
+
+	insertWebsite(*data, new);
+
 }
 
 
@@ -294,7 +298,9 @@ int main(int argc, char const *argv[])
 	printf("\n\n");
 
 	getchar();
-	bubbleSort(&data);
+
+	printf("\tNEW WEBSITE:\n");
+	newWebsite(&data);
 
 	printf("\tPRINT DATA:\n\t");
 
