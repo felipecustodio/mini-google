@@ -32,11 +32,12 @@ typedef struct database {
 // Funções funcionando:
 void createDatabase(DATABASE **database);
 boolean insertWebsite(DATABASE *data, WEBSITE *newWebsite);
-
-// Funções para terminar/testar:
 WEBSITE insertKeyword(WEBSITE *site, char* newKeyword);
 void removeWebsite();
 void updateRank(WEBSITE *site, int newRank);
+
+// Funções para terminar/testar:
+
 void printList();
 void searchKeyword(DATABASE *database, char *keyword);
 void relatedWebsites();
