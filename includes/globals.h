@@ -54,12 +54,12 @@ typedef enum {
 			
 ---------------------------------------------------------*/
 
-void errorCheck(void *pointer, char *pointerName) {
-	if (pointer == NULL) {
-		printf("Não há memória suficiente para alocar %s. Saindo...\n", pointerName);
-		exit(0);
-	}
-}
+// void errorCheck(void *pointer, char *pointerName) {
+// 	if (pointer == NULL) {
+// 		printf("Não há memória suficiente para alocar %s. Saindo...\n", pointerName);
+// 		exit(0);
+// 	}
+// }
 
 /*-------------------------------------------------------
 
@@ -72,10 +72,10 @@ void errorCheck(void *pointer, char *pointerName) {
 	
 ---------------------------------------------------------*/
 
-void shutdown() 
-{
-	// ******** LIMPAR TODA A MEMÓRIA DO PROGRAMA *********
-	exit(0);
-}
+// void shutdown() 
+// {
+// 	// ******** LIMPAR TODA A MEMÓRIA DO PROGRAMA *********
+// 	exit(0);
+// }
 
 #endif
