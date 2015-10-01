@@ -131,11 +131,13 @@ int main(int argc, char const *argv[]) {
 				auxSearch = searchKeyword(data, auxString);
 				relatedWebsites(data, auxSearch, auxString);
 				printSearch(auxSearch, data);
+				destroySearch(auxSearch);
 				break;
 
 			case close:
 				// Liberar memória
 				// Finalizar o programa
+				destroyDataBase(data);
 				printHeader();
 				printf("\n\n\t*** FINALIZAR ***\n\n");
 				break;
