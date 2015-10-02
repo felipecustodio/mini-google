@@ -143,12 +143,12 @@ boolean removeWebsite(DATABASE **data, WEBSITE *removal)
 
 	if (removal != NULL) { 
 
-		WEBSITE *aux = NULL;
+		WEBSITE *aux = removal;
 		removal->previous->next = removal->next;
 		removal->next->previous = removal->previous;	
 
 		// ****** LIBERAR MEMÓRIA DO NÓ ********
-
+		free(removal);
 		return true;
 	} else {
 		return false;
@@ -642,7 +642,34 @@ void printSearch(SEARCH *search, DATABASE *data) {
 		}
 		aux = aux->next;
 	}
+}
 
+void destroyDataBase(DATABASE* data)
+{
+	WEBSITE* aux = data->header->next;
 
+	int i;
+	while (aux != data->header)
+	{
+		for(i = 0; i < aux->keywords->total; i++)
+		{
+			free(aux->keywords->keywords[i]);
+		}
+		free(aux->name);
+		free(aux->keywords);
+		free(aux);
+		aux = aux->next; 
+	} 
 
+	free(aux);
+	free(data);
+}
+
+void destroySearch(SEARCH* search)
+{
+	int i;
+	for (i = 0; i < search->total; i++)
+	{
+		free(search->results[i]);
+	}
 }

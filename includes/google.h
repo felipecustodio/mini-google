@@ -54,5 +54,7 @@ void printWebsite(WEBSITE *print);
 void printList(DATABASE *data);
 void printSearch(SEARCH *search, DATABASE *data);
 
+void destroyDataBase(DATABASE* data);
+void destroySearch(SEARCH* search);
 
 #endif
