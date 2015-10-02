@@ -56,12 +56,13 @@ int main(int argc, char const *argv[]) {
  	Operation operation;
 
  	printHeader();
- 	printf("\tINICIALIZANDO PROGRAMA...\n");
+ 	printf("\t*** BEM-VINDO AO MINI GOOGLE! ***\n\n");
  	DATABASE *data = NULL;
  	createDatabase(&data);
- 	printf("\tLENDO ARQUIVO...\n");
  	readData("googlebot.csv", &data);
- 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n\t");
+ 	printf("\tALUNOS:\n");
+ 	printf("\tFelipe Scrochio Custódio\t9442688\n\tGuilherme Rodrigues Vicentin\t9293369\n\n");
+ 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...");
  	getchar();
 
 	do
