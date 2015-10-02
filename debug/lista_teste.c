@@ -124,25 +124,66 @@ void createDatabase(DATABASE **database)
 	}
 }
 
-boolean insertWebsite(DATABASE *database, WEBSITE *newWebsite)
-{
-	if (newWebsite != NULL)
-	{
-		WEBSITE *aux = NULL;
-		WEBSITE *end = database->header->previous;
+// boolean insertWebsite(DATABASE *database, WEBSITE *newWebsite)
+// {
+// 	if (newWebsite != NULL)
+// 	{
+// 		WEBSITE *aux = NULL;
+// 		WEBSITE *end = database->header->previous;
 
-		aux = end;
-		aux->next = newWebsite;
-		end = newWebsite;
-		newWebsite->previous = aux;
-		newWebsite->next = database->header;
-		database->header->previous = newWebsite;
-		database->size++;
+// 		aux = end;
+// 		aux->next = newWebsite;
+// 		end = newWebsite;
+// 		newWebsite->previous = aux;
+// 		newWebsite->next = database->header;
+// 		database->header->previous = newWebsite;
+// 		database->size++;
 
-		return true;
+// 		return true;
+// 	}
+// 	else
+// 		return false;
+// }
+
+void insertWebsite(DATABASE *data, WEBSITE* node) {
+	
+	WEBSITE *position = NULL;
+	WEBSITE* previous = NULL;
+	position = data->header->next;
+	node->next = NULL;
+	node->previous = NULL;
+
+	// Procura posição correta na lista
+	while(position != data->header && position->rank < node->rank) {
+
+		previous = position;
+		position = position->next;
+
 	}
-	else
-		return false;
+
+
+	//printList(data);
+
+	// Insere elemento na lista
+
+	if(data->header->next == data->header) {
+
+		// Inserção no início
+		data->header->next = node;
+		data->header->previous = node;
+		node->next = data->header;
+		node->previous = data->header;
+
+	} else {
+
+		// Inserção no meio/fim
+		previous->next = node;
+		node->previous = previous;
+		node->next = position;
+		position->previous = node;
+
+	}
+
 }
                                        
 void insertKeyword(WEBSITE **site, char* newKeyword) 
@@ -326,7 +367,6 @@ int main(int argc, char const *argv[])
 
 	web1->keywords = keylist;
 
-
 	WEBSITE *web2 = (WEBSITE*)malloc(sizeof(WEBSITE));
 	web2->id = 2;
 	web2->name = (char*)malloc(sizeof(char) * 100);
@@ -342,6 +382,7 @@ int main(int argc, char const *argv[])
 	keylist->keywords[0] = "key1";
 	keylist->keywords[1] = "key2";
 	keylist->total = 2;
+
 	web2->keywords = keylist;
 
 	WEBSITE *web3 = (WEBSITE*)malloc(sizeof(WEBSITE));
@@ -359,13 +400,14 @@ int main(int argc, char const *argv[])
 	keylist->keywords[0] = "key1";
 	keylist->keywords[1] = "key2";
 	keylist->total = 2;
+
 	web3->keywords = keylist;
-	web3->address = (char*)malloc(sizeof(char) * 100);
-	web3->address = "address3";
 
-
+	printf("\tINSERIR WEB1\n");
 	insertWebsite(data, web1);
+	printf("\tINSERIR WEB2\n");
 	insertWebsite(data, web2);
+	printf("\tINSERIR WEB3\n");
 	insertWebsite(data, web3);
 
 	printf("\tPRINT DATA:\n\t");
@@ -387,12 +429,8 @@ int main(int argc, char const *argv[])
 	printf("\tNEW WEBSITE:\n");
 	newWebsite(&data);
 
-
 	printf("\tPRINT DATA:\n\t");
 
-    removeWebsite(&data, web2);
-    removeWebsite(&data, web3);
-    
 	aux = data->header->next;
 	while (aux != data->header) {
 	 	printf("%s %d -> ", aux->name, aux->rank);
@@ -404,12 +442,13 @@ int main(int argc, char const *argv[])
 	printf("%s %d-> ", aux->name, aux->rank);
 	printf("\n\n");
 
-
-
 	printList(data);
 
-    removeWebsite(&data, web2);
-    removeWebsite(&data, web3);
+   // removeWebsite(&data, web2);
+   // removeWebsite(&data, web3);
+
+    printList(data);
+
     writeCSVFile(data, "teste.csv");
 
 	return 0;

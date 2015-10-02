@@ -1,0 +1,59 @@
+/*-------------------------------------------------------
+
+	insertWebsite(DATABASE *data, WEBSITE *node)
+
+		DESCRIÇÃO:
+		
+			Insere um novo nó WEBSITE na lista circular
+			DATABASE *data, de forma ordenada.
+		
+		PARÂMETROS:
+			
+			@DATABASE *data: 
+				Lista dinâmica.
+			@WEBSITE *node:
+				Novo nó a ser inserido (previamente alocado)
+
+---------------------------------------------------------*/
+
+void insertWebsite(DATABASE *data, WEBSITE* node) {
+	
+	WEBSITE *position = NULL;
+	WEBSITE *previous = NULL;
+	WEBSITE *aux = NULL;
+	position = data->header->next;
+	node->next = NULL;
+	node->previous = NULL;
+
+	printf("\tPROCURA POSIÇÃO\n");
+	// Procura posição correta na lista
+	while(position != data->header && position->rank < node->rank) {
+
+		previous = position;
+		printf("\tPREVIOUS = %s\n", previous->name);
+		position = position->next;
+		printf("\tPOSITION = %s\n", position->name);
+
+	}
+
+	// Insere elemento na lista
+	if(data->header->next == data->header) {
+
+		// Inserção no início
+		data->header->next = node;
+		data->header->previous = node;
+		node->next = data->header;
+		node->previous = data->header;
+
+	} else {
+
+		// Inserção no meio/fim
+		printf("\twhat is previsous %s\n", previous->name);
+		previous->next = node;
+		node->previous = previous;
+		node->next = position;
+		position->previous = node;
+
+	}
+
+}

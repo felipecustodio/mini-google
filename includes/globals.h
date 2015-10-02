@@ -36,46 +36,5 @@ typedef enum {
 
 #define COMMA 42
 #define ENTER 10
-
-/*-------------------------------------------------------
-
-	errorCheck
-
-		DESCRIÇÃO:
-			
-			Checa se uma alocação de memória foi realizada
-			com sucesso. Se não foi, não há memória suficiente,
-			fechando o programa.
 		
-		PARÂMETROS:
-
-			@void *pointer: ponteiro void (aceita qualquer ponteiro)
-			@char *pointerName: nome do dado que foi alocado
-			
----------------------------------------------------------*/
-
-// void errorCheck(void *pointer, char *pointerName) {
-// 	if (pointer == NULL) {
-// 		printf("Não há memória suficiente para alocar %s. Saindo...\n", pointerName);
-// 		exit(0);
-// 	}
-// }
-
-/*-------------------------------------------------------
-
-	shutdown
-
-		DESCRIÇÃO:
-		
-			Encerra o minigoogle, liberando toda a 
-			memória alocada.
-	
----------------------------------------------------------*/
-
-// void shutdown() 
-// {
-// 	// ******** LIMPAR TODA A MEMÓRIA DO PROGRAMA *********
-// 	exit(0);
-// }
-
 #endif

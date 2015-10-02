@@ -59,6 +59,7 @@ int main(int argc, char const *argv[]) {
  	printf("\tINICIALIZANDO PROGRAMA...\n");
  	DATABASE *data = NULL;
  	createDatabase(&data);
+ 	printf("\tLENDO ARQUIVO...\n");
  	readData("googlebot.csv", &data);
  	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...\n\t");
  	getchar();
@@ -76,8 +77,8 @@ int main(int argc, char const *argv[]) {
 			case insertWebSite:
 				// Inserir novo site
 				printHeader();
-				newWebsite(&data);
 				printf("\n\n\t*** NOVO WEBSITE ***\n\n");
+				newWebsite(&data);
 				break;
 			
 			case removeWebSite:
@@ -143,6 +144,7 @@ int main(int argc, char const *argv[]) {
 
 		printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR");
 		getchar();
+		system("clear");
 
 	} while(operation != close);
 

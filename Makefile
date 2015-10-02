@@ -12,7 +12,7 @@ INCLUDES = ./includes
 
 #libraries and flags
 LIBS = -lm
-FLAGS = -Wall -g
+FLAGS = -Wall -g -Wextra
 
 all: compile run
 
