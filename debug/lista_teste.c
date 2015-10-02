@@ -21,27 +21,31 @@ void errorCheck(void *pointer, char *pointerName) {
 #define COMMA 44
 #define ENTER 10
 
-char* readString(FILE *pointer) {
+char* readString(FILE *pointer, int flag) {
 	
 	char* string = NULL;
+	// valor inicial setado em um caractere especial
+	// para não causar erros com o loop while
 	char value = '@';
+	char stop = '@';
 	int counter = 0;
 
-	//printf("readString call\n");
-	//printf("reading: ");
+	if(flag) {
+		stop = COMMA;
+	} else {
+		stop = ENTER;
+	}
 
 	do {
-		//  && value != ENTER
+
 		fscanf(pointer, "%c", &value);
-		//printf("%c", value);
 		string = (char*)realloc(string, sizeof(char) * counter + 1);
 		string[counter] = value;		
 		counter++;
 
-	} while (value != COMMA);
-	//printf("\n");
-	//printf(" ");
+	} while (value != stop);
 
+	// transforma o vetor de caracteres em string com final \0
 	string[counter-1] = '\0';
 
 	return string;
@@ -120,25 +124,66 @@ void createDatabase(DATABASE **database)
 	}
 }
 
-boolean insertWebsite(DATABASE *database, WEBSITE *newWebsite)
-{
-	if (newWebsite != NULL)
-	{
-		WEBSITE *aux = NULL;
-		WEBSITE *end = database->header->previous;
+// boolean insertWebsite(DATABASE *database, WEBSITE *newWebsite)
+// {
+// 	if (newWebsite != NULL)
+// 	{
+// 		WEBSITE *aux = NULL;
+// 		WEBSITE *end = database->header->previous;
 
-		aux = end;
-		aux->next = newWebsite;
-		end = newWebsite;
-		newWebsite->previous = aux;
-		newWebsite->next = database->header;
-		database->header->previous = newWebsite;
-		database->size++;
+// 		aux = end;
+// 		aux->next = newWebsite;
+// 		end = newWebsite;
+// 		newWebsite->previous = aux;
+// 		newWebsite->next = database->header;
+// 		database->header->previous = newWebsite;
+// 		database->size++;
 
-		return true;
+// 		return true;
+// 	}
+// 	else
+// 		return false;
+// }
+
+void insertWebsite(DATABASE *data, WEBSITE* node) {
+	
+	WEBSITE *position = NULL;
+	WEBSITE* previous = NULL;
+	position = data->header->next;
+	node->next = NULL;
+	node->previous = NULL;
+
+	// Procura posição correta na lista
+	while(position != data->header && position->rank < node->rank) {
+
+		previous = position;
+		position = position->next;
+
 	}
-	else
-		return false;
+
+
+	//printList(data);
+
+	// Insere elemento na lista
+
+	if(data->header->next == data->header) {
+
+		// Inserção no início
+		data->header->next = node;
+		data->header->previous = node;
+		node->next = data->header;
+		node->previous = data->header;
+
+	} else {
+
+		// Inserção no meio/fim
+		previous->next = node;
+		node->previous = previous;
+		node->next = position;
+		position->previous = node;
+
+	}
+
 }
                                        
 void insertKeyword(WEBSITE **site, char* newKeyword) 
@@ -185,48 +230,111 @@ void updateRank(WEBSITE *site, int newRank)
 
 }
 
-void swap(WEBSITE *i, WEBSITE *j) {
+void printWebsite(WEBSITE *print) {
 
-	// *********** CORRIGIR SWAP ***************
-	i->next = j->next;
-	i->previous = j;
-	j->next = i;
-	j->previous = i->previous;
+	int i;
+	printf("\t");
+	printf("ID: %d ", print->id);
+	printf("NOME: %s ", print->name);
+	printf("RANK: %d ", print->rank);
+	printf("URL: %s ", print->address);
+	printf("PALAVRAS-CHAVE: ");
+	for (i = 0; i < print->keywords->total; i++) {	
+		printf("%s ", print->keywords->keywords[i]);
+	}
+	printf("\n");
 
 }
 
-void bubbleSort(DATABASE **data) {
-	
-	int i,j;
+
+void printList(DATABASE *data) {
+
 	WEBSITE *aux = NULL;
-	WEBSITE *aux2 = NULL;
-
-	aux = (*data)->header->next;
-	aux2 = (*data)->header->next->next;
-
-	while (aux2 != (*data)->header) {
-
-		printf("\tCOMPARE %s %d VS %s %d\n", aux->name, aux->rank, aux2->name, aux2->rank);
-		if((aux->rank) < (aux2->rank)) {
-			printf("\tSWAP\n");
-			swap(aux, aux2);
-			aux = (*data)->header->next;
-			while (aux != (*data)->header) {
-				printf("%s %d -> ", aux->name, aux->rank);
-				aux = aux->next;	
-			}
-
-			printf("%s %d -> ", aux->name, aux->rank);
-			aux = aux->next;
-			printf("%s %d-> ", aux->name, aux->rank);
-			printf("\n\n");
-
-		}
-
+	aux = data->header->next;
+	while (aux != data->header) {
+		printWebsite(aux);
 		aux = aux->next;
-		aux2 = aux2->next;
-
 	}
+}
+
+
+/*-------------------------------------------------------
+	
+		newWebsite
+	
+---------------------------------------------------------*/
+
+void newWebsite(DATABASE **data) {
+
+	int i;
+	int keytotal = 0;
+	WEBSITE *new = NULL;
+	new = (WEBSITE*)malloc(sizeof(WEBSITE));
+
+	printf("\tINSIRA OS DADOS DO NOVO WEBSITE:\n");
+	new->id = (*data)->header->previous->id + 1;
+
+	printf("\tINSIRA O NOME: ");
+	new->name = readString(stdin, 0);
+
+	printf("\tINSIRA O RANK: ");
+	scanf("%d", &new->rank);
+	getchar();
+
+	printf("\tINSIRA O ENDEREÇO: ");
+	new->address = readString(stdin, 0);
+
+	new->keywords = (KEYWORDS*)malloc(sizeof(KEYWORDS));
+	printf("\tINSIRA O NÚMERO DE KEYWORDS: ");
+	scanf("%d", &keytotal);
+
+	new->keywords->total = keytotal;
+
+	getchar();
+	new->keywords->keywords = (char**)malloc(sizeof(char*) * new->keywords->total);
+
+	printf("\tINSIRA AS KEYWORDS:\n");
+	for (i = 0; i < new->keywords->total; i++) {
+		printf("\tKEYWORD %d: ", i+1);
+		new->keywords->keywords[i] = readString(stdin, 0);
+	}
+
+	new->related = false;
+	new->next = NULL;
+	new->previous = NULL;
+
+	insertWebsite(*data, new);
+
+}
+
+void writeCSVFile(DATABASE* database, const char* filename)
+{
+    FILE* csv_file = fopen(filename, "w");
+    if (csv_file == NULL)
+    {
+        printf("Could not open the file: %s\n", filename);
+        exit(0);
+    }
+    
+    WEBSITE* aux = database->header->next;
+    int i;
+    
+    while(aux != database->header)
+    {
+        fprintf(csv_file, "%d,%s,%d,%s,", aux->id, aux->name, aux->rank, aux->address);
+        for(i = 0; i < aux->keywords->total-1; i++)
+        {
+            fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+            fprintf(csv_file, ",");
+        }
+        
+        fprintf(csv_file, "%s", aux->keywords->keywords[i]);
+        fprintf(csv_file, "\n");
+        
+        aux = aux->next;
+    }
+    
+    fclose(csv_file);
 }
 
 
@@ -259,7 +367,6 @@ int main(int argc, char const *argv[])
 
 	web1->keywords = keylist;
 
-
 	WEBSITE *web2 = (WEBSITE*)malloc(sizeof(WEBSITE));
 	web2->id = 2;
 	web2->name = (char*)malloc(sizeof(char) * 100);
@@ -267,16 +374,40 @@ int main(int argc, char const *argv[])
 	web2->rank = 200;
 	web2->address = (char*)malloc(sizeof(char) * 100);
 	web2->address = "address2";
+	keylist->keywords = NULL;
+	keylist->total = 0;
+	keylist->keywords = (char**)realloc(keylist->keywords, sizeof(char*) * (2));
+	keylist->keywords[0] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[1] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[0] = "key1";
+	keylist->keywords[1] = "key2";
+	keylist->total = 2;
+
+	web2->keywords = keylist;
+
 	WEBSITE *web3 = (WEBSITE*)malloc(sizeof(WEBSITE));
 	web3->id = 3;
 	web3->name = (char*)malloc(sizeof(char) * 100);
 	web3->name = "website3";
 	web3->rank = 300;
-	web2->address = (char*)malloc(sizeof(char) * 100);
-	web2->address = "address3";
+	web3->address = (char*)malloc(sizeof(char) * 100);
+	web3->address = "address3";
+	keylist->keywords = NULL;
+	keylist->total = 0;
+	keylist->keywords = (char**)realloc(keylist->keywords, sizeof(char*) * (2));
+	keylist->keywords[0] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[1] = (char*)malloc(sizeof(char) * 100);
+	keylist->keywords[0] = "key1";
+	keylist->keywords[1] = "key2";
+	keylist->total = 2;
 
+	web3->keywords = keylist;
+
+	printf("\tINSERIR WEB1\n");
 	insertWebsite(data, web1);
+	printf("\tINSERIR WEB2\n");
 	insertWebsite(data, web2);
+	printf("\tINSERIR WEB3\n");
 	insertWebsite(data, web3);
 
 	printf("\tPRINT DATA:\n\t");
@@ -294,20 +425,31 @@ int main(int argc, char const *argv[])
 	printf("\n\n");
 
 	getchar();
-	bubbleSort(&data);
+
+	printf("\tNEW WEBSITE:\n");
+	newWebsite(&data);
 
 	printf("\tPRINT DATA:\n\t");
 
 	aux = data->header->next;
 	while (aux != data->header) {
-		printf("%s %d -> ", aux->name, aux->rank);
-		aux = aux->next;	
+	 	printf("%s %d -> ", aux->name, aux->rank);
+	 	aux = aux->next;	
 	}
 
 	printf("%s %d -> ", aux->name, aux->rank);
 	aux = aux->next;
 	printf("%s %d-> ", aux->name, aux->rank);
 	printf("\n\n");
+
+	printList(data);
+
+   // removeWebsite(&data, web2);
+   // removeWebsite(&data, web3);
+
+    printList(data);
+
+    writeCSVFile(data, "teste.csv");
 
 	return 0;
 }

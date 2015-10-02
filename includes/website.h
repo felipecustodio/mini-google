@@ -1,7 +1,14 @@
 #ifndef _WEBSITE_H_
 #define _WEBSITE_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "google.h"
+#include "website.h"
 #include "globals.h"
+#include "menu.h"
 
 /*-------------------------------------------------------
 

@@ -21,24 +21,49 @@ Nº USP	:	9442688
 Data:		01/09/2015
 ---------------------------------------------------------*/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "google.h"
+#include "website.h"
+#include "input.h"
 #include "globals.h"
+#include "menu.h"
 
 typedef enum operation
 {
 	insertWebSite = 1,
 	removeWebSite,
 	insertKeyWord,
-	updateRank,
+	updatePagerank,
 	showList,
 	searchByKey,
-	shutdown
+	close
 
 } Operation;
 
 int main(int argc, char const *argv[]) {
  	
+ 	// VARIÁVEIS AUXILIARES DE MENU
  	int aux;
+ 	int id;
+ 	int newRank;
+ 	WEBSITE *auxWeb = NULL;
+ 	SEARCH *auxSearch = NULL;
+ 	char *auxString = NULL;
+
  	Operation operation;
+
+ 	printHeader();
+ 	printf("\t*** BEM-VINDO AO MINI GOOGLE! ***\n\n");
+ 	DATABASE *data = NULL;
+ 	createDatabase(&data);
+ 	readData("googlebot.csv", &data);
+ 	printf("\tALUNOS:\n");
+ 	printf("\tFelipe Scrochio Custódio\t9442688\n\tGuilherme Rodrigues Vicentin\t9293369\n\n");
+ 	printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR...");
+ 	getchar();
 
 	do
 	{
@@ -53,59 +78,78 @@ int main(int argc, char const *argv[]) {
 			case insertWebSite:
 				// Inserir novo site
 				printHeader();
-				printf("\n\n\tOPCAO 1\n\n");
+				printf("\n\n\t*** NOVO WEBSITE ***\n\n");
+				newWebsite(&data);
 				break;
 			
 			case removeWebSite:
-				// Inserir palavra-chave em um site
+				// Remover um site da lista
 				printHeader();
-				printf("\n\n\tOPCAO 2\n\n");
+				printf("\n\n\t*** REMOVER WEBSITE ***\n\n");
+				printf("\tDIGITE O ID A SER REMOVIDO: ");
+				scanf("%d", &id);
+				auxWeb = searchID(data, id);
+				removeWebsite(&data, auxWeb);
 				break;
 			
 			case insertKeyWord:
-				// Remover um site da lista
+				// Inserir palavra-chave em um site
 				printHeader();
-				printf("\n\n\tOPCAO 3\n\n");
+				printf("\n\n\t*** NOVA KEYWORD ***\n\n");
+				printf("\tDIGITE O ID A SER ALTERADO: ");
+				scanf("%d", &id);
+				getchar();
+				auxWeb = searchID(data, id);
+				printf("\tDIGITE A NOVA KEYWORD: ");
+				auxString = readString(stdin, 0);
+				insertKeyword(&auxWeb, auxString);
 				break;
 			
-			case updateRank:
+			case updatePagerank:
 				// Atualizar relevância de um site
 				printHeader();
-				printf("\n\n\tOPCAO 4\n\n");
+				printf("\n\n\t*** ATUALIZAR RELEVÂNCIA ***\n\n");
+				printf("\tDIGITE O ID A SER ALTERADO: ");
+				scanf("%d", &id);
+				getchar();
+				auxWeb = searchID(data, id);
+				updateRank(auxWeb);
 				break;
 			
 			case showList:
 				// Exibir lista
 				printHeader();
-				printf("\n\n\tOPCAO 5\n\n");
+				printf("\n\n\t*** EXIBIR LISTA ***\n\n");
+				printList(data);
 				break;
 
 			case searchByKey:
 				// Busca por palavra-chave
 				// Exibir sugestão de sites
 				printHeader();
-				printf("\n\n\tOPCAO 6\n\n");
+				printf("\n\n\t*** BUSCA ***\n\n");
+				printf("\tDIGITE A KEYWORD A SER BUSCADA: ");
+				auxString = readString(stdin, 0);
+				auxSearch = searchKeyword(data, auxString);
+				relatedWebsites(data, auxSearch, auxString);
+				printSearch(auxSearch, data);
+				destroySearch(auxSearch);
 				break;
 
-			case shutdown:
+			case close:
 				// Liberar memória
 				// Finalizar o programa
+				destroyDataBase(data);
 				printHeader();
-				printf("\n\n\tOPCAO 7\n\n");
+				printf("\n\n\t*** FINALIZAR ***\n\n");
 				break;
 		}
 
 		printf("\tPRESSIONE QUALQUER TECLA PARA CONTINUAR");
 		getchar();
+		system("clear");
 
-	} while(operation != shutdown);
+	} while(operation != close);
 
 	return 0;
 }
-
-
-/*-------------------------------------------------------
-
-	COMENTÁRIO
-	
----------------------------------------------------------*/

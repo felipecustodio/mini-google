@@ -19,11 +19,19 @@ void errorCheck(void *pointer, char *pointerName) {
 #define COMMA 44
 #define ENTER 10
 
-char* readString(FILE *pointer) {
+char* readString(FILE *pointer, int flag) {
 	
 	char* string = NULL;
 	char value = '@';
+	char stop = '@';
 	int counter = 0;
+
+	if(flag) {
+		stop = COMMA;
+	} else {
+		stop = ENTER;
+	}
+
 
 	//printf("readString call\n");
 	//printf("reading: ");
@@ -36,7 +44,7 @@ char* readString(FILE *pointer) {
 		string[counter] = value;		
 		counter++;
 
-	} while (value != COMMA);
+	} while (value != stop);
 	//printf("\n");
 	//printf(" ");
 
@@ -235,12 +243,12 @@ void readData(char* filename, DATABASE **data) {
 		fscanf(googlebot, "%d", &(aux->id));
 		buffer = fgetc(googlebot);
 
-		aux->name = readString(googlebot);
+		aux->name = readString(googlebot, 1);
 
 		fscanf(googlebot, "%d", &(aux->rank));
 		buffer = fgetc(googlebot);
 
-		aux->address = readString(googlebot);
+		aux->address = readString(googlebot, 1);
 		(aux->keywords) = readKeywords(googlebot);
 
 		insertWebsite((*data), aux);
@@ -272,6 +280,111 @@ void printCSV(DATABASE* data) {
 
 }
 
+SEARCH* searchKeyword(DATABASE *database, char *keyword)
+{
+    // começar a busca no header com nó sentinela
+    SEARCH *search;
+    search = (SEARCH*)malloc(sizeof(SEARCH));
+    search->total = 0;
+    search->results = NULL;
+    
+    WEBSITE *aux = database->header->next;
+    int i, j, compare;
+    
+    while(aux != database->header)
+    {
+        // percorrer keywords do website atual
+        for (j = 0; j < aux->keywords->total; j++) {
+            
+            compare = strcmp(aux->keywords->keywords[j], keyword);
+            
+            if (compare == 0) {
+                // TAD search: contém endereços para os sites encontrados na busca
+                search->results = (WEBSITE**)realloc(search->results, sizeof(WEBSITE*) * (search->total + 1));
+                search->results[search->total] = aux;
+                search->total++;
+            }
+            
+        }
+        
+        aux = aux->next;
+        
+    }
+    
+    return search;
+    
+}
+
+WEBSITE* searchID(DATABASE* database, const int id)
+{
+    WEBSITE* aux = database->header->next;
+    
+    while (aux != database->header)
+    {
+        if (aux->id == id)
+        {
+            return aux;
+        }
+        aux = aux->next;
+    }
+    
+    aux = NULL;
+    return aux;
+}
+
+void relatedWebsites(DATABASE* database, SEARCH* search, char *keyword)
+{
+    KEYWORDS* keylist = (KEYWORDS*) malloc(sizeof(KEYWORDS));
+    keylist->keywords	= (char**) malloc(sizeof(char*) * search->total);
+    
+    int i;
+    for(i = 0; i < search->total; i++)
+    {
+        //pegando uma palavra por site para buscar relacionados
+        if (strcmp(keyword, search->results[i]->keywords->keywords[i]))
+            keylist->keywords[i] = search->results[i]->keywords->keywords[i];
+        else
+        {
+            if (i > 0)
+            {
+                keylist->keywords[i] = search->results[i]->keywords->keywords[i-1];
+            }
+            else
+            {
+                keylist->keywords[i] = search->results[i]->keywords->keywords[i+1];
+            }
+        }
+        
+    }
+    
+    WEBSITE* aux = database->header->next;
+    
+    int j;
+    while(aux != database->header)
+    {
+        for(i = 0; i < keylist->total; i++)
+        {
+            for(j = 0; j < aux->keywords->total; j++)
+            {
+                if(strcmp(keylist->keywords[i], aux->keywords->keywords[j]))
+                {
+                    aux->related = true;
+                }
+            }
+        }
+        
+        aux = aux->next;
+    }
+    
+    for(i = 0; i < search->total; i++)
+    {
+        search->results[i]->related = false;
+    }
+    
+    free(keylist->keywords);
+    free(keylist);
+}
+
 int main(int argc, char const *argv[]) {
 	DATABASE *data = NULL;
 	createDatabase(&data);
@@ -279,5 +392,16 @@ int main(int argc, char const *argv[]) {
 	//printf("Iniciando leitura de 'googlebot.csv'\n");
 	readData("googlebot.csv", &data);
 	printCSV(data);
+    
+    printf("\n\n");
+    
+    SEARCH* test = searchKeyword(data, "reviews");
+    int i;
+    for(i = 0; i < test->total; i++)
+    {
+        printf("%s\n", test->results[i]->name);
+    }
+    relatedWebsites(data, test, "reviews");
+    
 	return 0;
 }

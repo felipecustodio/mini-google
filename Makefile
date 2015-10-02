@@ -5,14 +5,14 @@ CC = gcc
 BINARY = ./build/miniGoogle
 
 #sources directory
-SRC = src/minigoogle.c src/google.c src/auxiliar.c
+SRC = src/minigoogle.c src/google.c src/input.c src/menu.c 
 
 #includes directory
 INCLUDES = ./includes
 
 #libraries and flags
 LIBS = -lm
-FLAGS = -Wall -g
+FLAGS = -Wall -g -Wextra
 
 all: compile run
 

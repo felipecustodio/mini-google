@@ -1,13 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "menu.h"
-#include "google.h"
-
 /*-------------------------------------------------------
 
 	MENU
 	
 ---------------------------------------------------------*/
+
+#include "menu.h"
 
 void printHeader(void)
 {
@@ -25,8 +22,8 @@ void printMenu(void)
 {
 	printf("\t------------------------------------------------------\n");
 	printf("\t1 - Inserir novo site\n");
-	printf("\t2 - Inserir palavra chave em um site\n");
-	printf("\t3 - Remover um site da lista\n");
+	printf("\t2 - Remover um site\n");
+	printf("\t3 - Inserir palavra chave em um site\n");
 	printf("\t4 - Atualizar relevancia de um site\n");
 	printf("\t5 - Exibir lista\n");
 	printf("\t6 - Buscar por palavra chave e exibir sugestao de sites\n");
@@ -38,6 +35,8 @@ void printMenu(void)
 void printMainMenu(void)
 {
 	system("clear");
+	// WINDOWS:
+	// system("cls");
 	printHeader();
 	printMenu();
 }
