@@ -302,29 +302,32 @@ void relatedWebsites(DATABASE* database, SEARCH* search, char *keyword)
         keylist->total++;
     }
     
-    WEBSITE* aux = database->header->next;
-    
-    int j;
-    while(aux != database->header)
+    if (search->total != 0)
     {
-        for(i = 0; i < keylist->total; i++)
-        {
-            for(j = 0; j < aux->keywords->total; j++)
-            {
-                if(strcmp(keylist->keywords[i], aux->keywords->keywords[j]))
-                {
-                    aux->related = true;
-                }
-            }
-        }
-        
-        aux = aux->next;
-    }
-    
-    for(i = 0; i < search->total; i++)
-    {
-        search->results[i]->related = false;
-    }
+	    WEBSITE* aux = database->header->next;
+	    
+	    int j;
+	    while(aux != database->header)
+	    {
+	        for(i = 0; i < keylist->total; i++)
+	        {
+	            for(j = 0; j < aux->keywords->total; j++)
+	            {
+	                if(strcmp(keylist->keywords[i], aux->keywords->keywords[j]))
+	                {
+	                    aux->related = true;
+	                }
+	            }
+	        }
+	        
+	        aux = aux->next;
+	    }
+
+	    for(i = 0; i < search->total; i++)
+	    {
+	        search->results[i]->related = false;
+	    }
+	}
     
     free(keylist->keywords);
     free(keylist);
@@ -608,23 +611,29 @@ void printList(DATABASE *data) {
 
 void printSearch(SEARCH *search, DATABASE *data) {
 
-	int i;
-	printf("\tRESULTADO DA BUSCA:\n");
-	for (i = 0; i < search->total; i++) {
-		printWebsite(search->results[i]);
-		search->results[i]->related = false;
-	}
-	printf("\n\n");
-	printf("\tSITES RELACIONADOS:\n");
-	WEBSITE *aux = NULL;
-	aux = data->header->next;
-	while (aux != data->header) {
-		if(aux->related) {
-			printWebsite(aux);
+	if(search->total != 0)
+	{
+		int i;
+		printf("\tRESULTADO DA BUSCA:\n");
+		for (i = 0; i < search->total; i++) {
+			printWebsite(search->results[i]);
+			search->results[i]->related = false;
 		}
-		aux = aux->next;
+		printf("\n\n");
+		printf("\tSITES RELACIONADOS:\n");
+		WEBSITE *aux = NULL;
+		aux = data->header->next;
+		while (aux != data->header) {
+			if(aux->related) {
+				printWebsite(aux);
+			}
+			aux = aux->next;
+		}
 	}
-
+	else
+	{
+		printf("\t***NENHUM SITE ENCONTRADO***\n\n");
+	}
 
 
 }
