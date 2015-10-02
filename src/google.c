@@ -147,7 +147,6 @@ boolean removeWebsite(DATABASE **data, WEBSITE *removal)
 		removal->previous->next = removal->next;
 		removal->next->previous = removal->previous;	
 
-		// ****** LIBERAR MEMÓRIA DO NÓ ********
 		free(removal);
 		return true;
 	} else {
@@ -240,17 +239,15 @@ void newWebsite(DATABASE **data) {
 
 /*-------------------------------------------------------
 	
-		newWebsite
+		searchKeywiord
 
 			DESCRIÇÃO:
-				O usuário insere os dados de um novo
-				website que será colocado na lista pela
-				insertWebsite (inserção ordenada)
+				Busca por uma keyword na lista, armazenando
+				os sites que a contém em um registro SEARCH
 	
 			PARÂMETROS:
-				@ DATABASE **data: 
-					Endereço da lista em que o site será 
-					inserido. 
+				@ DATABASE *database: lista
+				@ char *keyword: chave de busca
 
 ---------------------------------------------------------*/
 
@@ -291,12 +288,17 @@ SEARCH* searchKeyword(DATABASE *database, char *keyword)
 
 /*-------------------------------------------------------
 
-	nome_da_funcao
+	relatedWebsites
 
 		DESCRIÇÃO:
-
+			A partir de um registro SEARCH, encontra e seta
+			como related = true todos os sites que contém
+			keywords em comum com os sites de SEARCH.
 		
 		PARÂMETROS:
+			@ DATABASE* database: lista
+			@ SEARCH* search: registro de resultados de uma busca
+			@ char *keyword: palavra sendo buscada
 			
 ---------------------------------------------------------*/
 
@@ -601,6 +603,19 @@ void readData(char* filename, DATABASE **data) {
 
 }
 
+/*-------------------------------------------------------
+
+	printWebsite
+
+		DESCRIÇÃO:
+			Imprime as informações de um nó website
+
+		PARÂMETROS:
+			
+			@WEBSITE *print: nó website a ser impresso na tela
+
+---------------------------------------------------------*/
+
 void printWebsite(WEBSITE *print) {
 
 	int i;
@@ -617,6 +632,19 @@ void printWebsite(WEBSITE *print) {
 
 }
 
+/*-------------------------------------------------------
+
+	printList
+
+		DESCRIÇÃO:
+			Imprime todos os sites armazenados na memória
+
+		PARÂMETROS:
+			
+			@DATABASE *data: lista de sites
+
+---------------------------------------------------------*/
+
 void printList(DATABASE *data) {
 
 	WEBSITE *aux = NULL;
@@ -626,6 +654,21 @@ void printList(DATABASE *data) {
 		aux = aux->next;
 	}
 }
+
+/*-------------------------------------------------------
+
+	printSearch
+
+		DESCRIÇÃO:
+			Imprime todos os sites armazenados em um registro
+			de busca.
+
+		PARÂMETROS:
+			
+			@SEARCH *search: registro de busca
+			@DATABASE *data: lista
+
+---------------------------------------------------------*/
 
 void printSearch(SEARCH *search, DATABASE *data) {
 
@@ -648,16 +691,18 @@ void printSearch(SEARCH *search, DATABASE *data) {
 			aux = aux->next;
 		}
 	}
-<<<<<<< HEAD
 	else
 	{
 		printf("\t***NENHUM SITE ENCONTRADO***\n\n");
 	}
 
-
-=======
->>>>>>> 5df5561883ee9ca967a8cb658c0f7e933b5dba1f
 }
+
+/*-------------------------------------------------------
+
+	FUNÇÕES DE LIBERAÇÃO DE MEMÓRIA ALOCADA
+
+---------------------------------------------------------*/
 
 void destroyDataBase(DATABASE* data)
 {

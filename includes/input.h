@@ -10,6 +10,7 @@
 #include "globals.h"
 #include "menu.h"
 
+// Função de leitura de string auxiliar
 char* readString(FILE *pointer, int flag);
 
 #endif

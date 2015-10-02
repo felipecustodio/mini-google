@@ -1,26 +1,10 @@
 /*-------------------------------------------------------
 
-	FUNÇÕES DE LEITURA DE ARQUIVO .CSV
+	FUNÇÃO DE LEITURA AUXILIAR
 	
 ---------------------------------------------------------*/
 
 #include "input.h"
-
-
-/*-------------------------------------------------------
-
-	readData(char* filename, DATABASE **data)
-
-		DESCRIÇÃO:
-			Realiza a leitura do arquivo (filename), escrevendo
-			em um DATABASE já existente na main. 
-
-		PARÂMETROS:
-			
-			@char *filename: nome do arquivo a ser lido
-			@DATABASE **data: endereço do ponteiro de lista *data
-
----------------------------------------------------------*/
 
 char* readString(FILE *pointer, int flag) {
 	
@@ -29,6 +13,9 @@ char* readString(FILE *pointer, int flag) {
 	char stop = '@';
 	int counter = 0;
 
+	// FLAG:
+	// 1 - lê até uma vírgula
+	// 0 - lê até uma quebra de linha
 	if(flag) {
 		stop = ',';
 	} else {
@@ -36,20 +23,15 @@ char* readString(FILE *pointer, int flag) {
 	}
 
 
-	//printf("readString call\n");
-	//printf("reading: ");
-
 	do {
-		//  && value != ENTER
+
 		fscanf(pointer, "%c", &value);
-		//printf("%c", value);
+
 		string = (char*)realloc(string, sizeof(char) * counter + 1);
 		string[counter] = value;		
 		counter++;
 
 	} while (value != stop);
-	//printf("\n");
-	//printf(" ");
 
 	string[counter-1] = '\0';
 
