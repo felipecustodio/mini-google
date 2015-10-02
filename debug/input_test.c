@@ -394,6 +394,7 @@ int main(int argc, char const *argv[]) {
 	printCSV(data);
     
     printf("\n\n");
+    
     SEARCH* test = searchKeyword(data, "reviews");
     int i;
     for(i = 0; i < test->total; i++)

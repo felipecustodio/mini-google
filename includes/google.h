@@ -36,7 +36,7 @@ typedef struct database {
 ---------------------------------------------------------*/
 
 void createDatabase(DATABASE **database);
-boolean insertWebsite(DATABASE *data, WEBSITE *node);
+boolean insertWebsite(DATABASE *data, WEBSITE* node);
 void insertKeyword(WEBSITE **site, char* newKeyword);
 boolean removeWebsite(DATABASE **data, WEBSITE *removal);
 void updateRank(WEBSITE *site);

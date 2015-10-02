@@ -47,9 +47,7 @@ void createDatabase(DATABASE **database)
 		DESCRIÇÃO:
 		
 			Insere um novo nó WEBSITE na lista circular
-			DATABASE *data. Seta os ponteiros de anterior
-			e próximo do header, do novo nó e do antigo nó
-			final (anterior do header).
+			DATABASE *data, de forma ordenada.
 		
 		PARÂMETROS:
 			
@@ -60,25 +58,46 @@ void createDatabase(DATABASE **database)
 
 ---------------------------------------------------------*/
 
-boolean insertWebsite(DATABASE *data, WEBSITE *node)
-{
-	if (node != NULL)
-	{
-		WEBSITE *aux = NULL;
-		WEBSITE *end = (data)->header->previous;
+boolean insertWebsite(DATABASE *data, WEBSITE* node) {
+	
+	WEBSITE *position = NULL;
+	WEBSITE *previous = NULL;
+	WEBSITE *aux = NULL;
+	position = data->header->next;
+	previous = data->header;	
+	node->next = NULL;
+	node->previous = NULL;
 
-		aux = end;
-		aux->next = node;
-		end = node;
-		node->previous = aux;
-		node->next = (data)->header;
-		(data)->header->previous = node;
+	// Procura posição correta na lista
+	while(position->rank < node->rank && position != data->header) {
+
+		previous = position;
+		position = position->next;
+
+	}
+
+	// Insere elemento na lista
+	if(data->header->next == data->header) {
+		// Inserção no início
+		data->header->next = node;
+		data->header->previous = node;
+		node->next = data->header;
+		node->previous = data->header;
 		(data)->size++;
 
-		return true;
+	} else {
+
+		// Inserção no meio/fim
+		previous->next = node;
+		node->previous = previous;
+		node->next = position;
+		position->previous = node;
+		(data)->size++;
+
 	}
-	else
-		return false;
+
+	return true;
+
 }
 
 /*-------------------------------------------------------
@@ -559,7 +578,6 @@ void readData(char* filename, DATABASE **data) {
 
 		if (aux == NULL) {
 			aux = (WEBSITE*)malloc(sizeof(WEBSITE));
-
 		}	
 
 		fscanf(googlebot, "%d", &(aux->id));
@@ -630,12 +648,15 @@ void printSearch(SEARCH *search, DATABASE *data) {
 			aux = aux->next;
 		}
 	}
+<<<<<<< HEAD
 	else
 	{
 		printf("\t***NENHUM SITE ENCONTRADO***\n\n");
 	}
 
 
+=======
+>>>>>>> 5df5561883ee9ca967a8cb658c0f7e933b5dba1f
 }
 
 void destroyDataBase(DATABASE* data)

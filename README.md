@@ -2,6 +2,8 @@
 
 Projeto 01 da disciplina de Algoritmos e Estruturas de Dados 1, Bacharelado de Ciências da Computação, ICMC - USP.
 
+HOSTED @ https://github.com/felipecustodio/mini-google
+
 # O que é o Mini-Google?
 
 O Google Search é um serviço de busca que, a partir de um termo informado pelo usuário,
